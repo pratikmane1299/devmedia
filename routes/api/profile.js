@@ -3,6 +3,7 @@ const { body, validationResult } = require('express-validator');
 const normalizeUrl = require('normalize-url');
 
 const Profile = require('../../models/profile');
+const isObjectId = require('../../middlewares/isObjectId');
 
 const router = express.Router();
 
@@ -69,6 +70,29 @@ router.post('/',
     } catch(error) {
       console.error(error);
       res.status(500).send('Internal server error');
+    }
+  }
+);
+
+router.get('/:userId', 
+  isObjectId('userId'),
+  async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+      const profile = await Profile.findOne({ user: userId }).populate('user', [
+        'name',
+        'avatar',
+      ]);
+
+      if (!profile) {
+        return res.status(404).json({ msg: 'Profile for the user not found' });
+      }
+
+      res.json(profile);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send('Internal server error');
     }
   }
 );
