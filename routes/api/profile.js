@@ -1,5 +1,6 @@
 const express = require('express');
 const { body, validationResult } = require('express-validator');
+const normalizeUrl = require('normalize-url');
 
 const Profile = require('../../models/profile');
 
@@ -34,50 +35,35 @@ router.post('/',
     }
 
     const {
-      company,
       website,
-      location,
-      bio,
-      status,
-      githubusername,
       skills,
       youtube,
       facebook,
       twitter,
       instagram,
       linkedin,
+      ...rest
     } = req.body;
 
-    let profileBody = {};
-    profileBody.user = req.user.id;
-    profileBody.status = status;
-    profileBody.skills = skills.split(',').map(skill => skill.trim());
-    if (company) profileBody.company = company;
-    if (website) profileBody.website = website;
-    if (location) profileBody.location = location;
-    if (bio) profileBody.bio = bio;
-    if (githubusername) profileBody.githubusername = githubusername;
+    let profileBody = {
+      user: req.user.id,
+      skills: skills.split(',').map(skill => skill.trim()),
+      ...rest
+    };
 
-    profileBody.social = {};
-    if (youtube) profileBody.social.youtube = youtube;
-    if (twitter) profileBody.social.twitter = twitter;
-    if (facebook) profileBody.social.facebook = facebook;
-    if (instagram) profileBody.social.instagram = instagram;
-    if (linkedin) profileBody.social.linkedin = linkedin;
+    social = { youtube, twitter, instagram, facebook, linkedin };
+    for (const [key, value] of Object.entries(social)) {
+      if (value && value.length > 0)
+        social[key] = normalizeUrl(value, { forceHttps: true });
+    }
+
+    profileBody.social = social;
 
     try {
-
-      let profile = await Profile.findOne({ user: req.user.id });
-
-      if (profile) {
-        profile = await Profile.findOneAndUpdate(
-          { user: req.user.id },
-          { $set: profileBody },
-          { new: true }
-        );
-      } else {
-        profile = await Profile.create(profileBody);
-      }
+      let profile = await Profile.findOneAndUpdate({ user: req.user.id },
+        { $set: profileBody },
+        { new: true, upsert: true, setDefaultsOnInsert: true },
+      );
 
       res.json(profile);
     } catch(error) {

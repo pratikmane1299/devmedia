@@ -2,6 +2,7 @@ const express = require('express');
 const { body, validationResult } = require('express-validator');
 const gravatar = require('gravatar');
 const jwt = require('jsonwebtoken');
+const normalizeUrl = require('normalize-url');
 
 const User = require('../../models/user');
 
@@ -37,11 +38,14 @@ router.post('/register',
         return res.status(400).json({ errors: [{ msg: 'Email is already taken' }] });
       }
 
-      const avatar = gravatar.url(email, {
-        s: '200',
-        r: 'pg',
-        d: 'mm'
-      });
+      const avatar = normalizeUrl(
+        gravatar.url(email, {
+          s: "200",
+          r: "pg",
+          d: "mm",
+        }),
+        { forceHttps: true }
+      );
 
       const newUser = await User.create({ name, email, password, avatar });
 
