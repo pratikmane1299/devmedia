@@ -123,4 +123,24 @@ router.put('/experience',
   }
 );
 
+router.delete('/experience/:expId', 
+  isObjectId('expId'),
+  async (req, res) => {
+    try {
+      const profile = await Profile.findOne({ user: req.user.id });
+
+      profile.experience = profile.experience.filter(
+        (exp) => exp.id.toString() !== req.params.expId
+      );
+
+      await profile.save();
+
+      return res.json(profile);
+    } catch (error) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+  }
+);
+
 module.exports = router;
