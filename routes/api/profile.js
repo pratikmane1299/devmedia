@@ -171,4 +171,24 @@ router.put('/education',
   }
 );
 
+router.delete('/education/:eduId',
+  isObjectId('eduId'),
+  async (req, res) => {
+    try {
+      const profile = await Profile.findOne({ user: req.user.id });
+
+      profile.education = profile.education.filter(
+        (edu) => edu.id.toString() !== req.params.eduId
+      );
+
+      await profile.save();
+
+      return res.json(profile);
+    } catch (error) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+  }
+);
+
 module.exports = router;
