@@ -143,4 +143,32 @@ router.delete('/experience/:expId',
   }
 );
 
+router.put('/education',
+  body('school', 'School is required').notEmpty(),
+  body('degree', 'Degree is required').notEmpty(),
+  body('fieldofstudy', 'Field of study is required').notEmpty(),
+  body('from', 'From date is required and needs to be from the past')
+    .notEmpty()
+    .custom((value, { req }) => (req.body.to ? value < req.body.to : true)),
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+      const profile = await Profile.findOne({ user: req.user.id });
+
+      profile.education.unshift(req.body);
+
+      await profile.save();
+
+      return res.json(profile);
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).send('Server Error');
+    }
+  }
+);
+
 module.exports = router;
