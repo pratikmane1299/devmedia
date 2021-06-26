@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
@@ -6,10 +7,16 @@ import store from './store';
 import Navbar from './components/Layout/Navbar';
 import Landing from './components/Layout/Landing';
 import Routes from './components/routing/Routes';
+import { fetchCurrentUserAction } from './actions/auth';
 
 import './App.css';
 
 function App() {
+
+  useEffect(() => {
+    store.dispatch(fetchCurrentUserAction());
+  }, []);
+
   return (
     <Provider store={store}>
       <Router>

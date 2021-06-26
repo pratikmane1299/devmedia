@@ -1,9 +1,37 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCode } from '@fortawesome/free-solid-svg-icons'
+import { faCode, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
-function Navbar() {
+import { logoutAction } from '../../actions/auth';
+
+function Navbar({ auth: { loading, isAuthenticated }, logoutAction }) {
+  const authLinks = (
+    <ul>
+      <li>
+        <Link onClick={() => logoutAction()}>
+          <FontAwesomeIcon icon={faSignOutAlt} />{" "}
+          <span className="hide-sm">Logout</span>
+        </Link>
+      </li>
+    </ul>
+  );
+
+  const guestLinks = (
+    <ul>
+      <li>
+        <Link>Developers</Link>
+      </li>
+      <li>
+        <Link to="/register">Register</Link>
+      </li>
+      <li>
+        <Link to="/login">Login</Link>
+      </li>
+    </ul>
+  );
+
   return (
     <nav className="navbar bg-dark">
       <h1>
@@ -11,13 +39,15 @@ function Navbar() {
           <FontAwesomeIcon icon={faCode} /> DevConnector
         </Link>
       </h1>
-      <ul>
-        <li><Link>Developers</Link></li>
-        <li><Link to="/register">Register</Link></li>
-        <li><Link to="/login">Login</Link></li>
-      </ul>
+      {!loading && isAuthenticated ? authLinks : guestLinks}
     </nav>
   );
 }
 
-export default Navbar;
+function mapStateToProps(store) {
+  return {
+    auth: store.auth,
+  };
+}
+
+export default connect(mapStateToProps, { logoutAction })(Navbar);

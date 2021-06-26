@@ -4,11 +4,12 @@ const gravatar = require('gravatar');
 const jwt = require('jsonwebtoken');
 const normalizeUrl = require('normalize-url');
 
+const auth = require('../../middlewares/veifyJwt');
 const User = require('../../models/user');
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/', auth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
     res.json(user);
