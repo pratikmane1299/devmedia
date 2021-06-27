@@ -48,6 +48,7 @@ router.post('/',
 
     let profileBody = {
       user: req.user.id,
+      website,
       skills: skills.split(',').map(skill => skill.trim()),
       ...rest
     };

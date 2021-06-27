@@ -8,6 +8,7 @@ import { getMyProfileAction } from '../../actions/profile';
 import  { setAlert } from '../../actions/alert';
 
 import Spinner from '../Layout/Spinner';
+import DashboardActions from './DashboardActions';
 
 function Dashboard({ profile, auth, getMyProfileAction, setAlert }) {
 
@@ -39,7 +40,9 @@ function Dashboard({ profile, auth, getMyProfileAction, setAlert }) {
       </p>
       <>
         {profile.me !== null ? (
-          <div>Has profile</div>
+          <>
+            <DashboardActions />
+          </>
         ) : (
           <>
             <p>You have not yet setup a profile, Please add some info.</p>
