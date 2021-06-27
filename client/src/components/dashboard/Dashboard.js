@@ -1,10 +1,15 @@
 import React, {useEffect } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUser } from '@fortawesome/free-solid-svg-icons';
 
 import { getMyProfileAction } from '../../actions/profile';
 import  { setAlert } from '../../actions/alert';
 
-function Dashboard({ me, getMyProfileAction, setAlert }) {
+import Spinner from '../Layout/Spinner';
+
+function Dashboard({ profile, auth, getMyProfileAction, setAlert }) {
 
   useEffect(() => {
     getMyProfileAction()
@@ -21,12 +26,37 @@ function Dashboard({ me, getMyProfileAction, setAlert }) {
       });
   }, [getMyProfileAction, setAlert]);
 
-  return <div>Dashboard Page</div>;
+
+  if (profile.loading) {
+    return <Spinner />
+  }
+
+  return (
+    <>
+      <h1 className="large text-primary">Dashboard</h1>
+      <p className="lead">
+        <FontAwesomeIcon icon={faUser} /> Welcome {auth.user && auth.user.name}
+      </p>
+      <>
+        {profile.me !== null ? (
+          <div>Has profile</div>
+        ) : (
+          <>
+            <p>You have not yet setup a profile, Please add some info.</p>
+            <Link to="create-profile" className="btn btn-primary my-1">
+              Create Profile
+            </Link>
+          </>
+        )}
+      </>
+    </>
+  );
 }
 
 function mapStateToProps(store) {
   return {
-    me: store.profile.me,
+    profile: store.profile,
+    auth: store.auth,
   };
 }
 
