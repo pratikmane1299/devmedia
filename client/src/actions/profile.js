@@ -5,6 +5,7 @@ export const FETCH_MY_PROFILE_SUCCESS = 'FETCH_MY_PROFILE_SUCCESS';
 export const FETCH_MY_PROFILE_FAILURE = 'FETCH_MY_PROFILE_FAILURE';
 export const CREATE_PROFILE_BEGIN = 'CREATE_PROFILE_BEGIN';
 export const CREATE_PROFILE_ERROR = 'CREATE_PROFILE_ERROR';
+export const CLEAR_PROFILE = 'CLEAR_PROFILE';
 
 export function getMyProfileAction() {
   return (dispatch) => {

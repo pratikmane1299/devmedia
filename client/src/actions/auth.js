@@ -1,4 +1,5 @@
 import { register, login, fetchCurrentUser } from '../services/auth';
+import { CLEAR_PROFILE } from './profile';
 
 export const REGISTER_BEGIN = 'REGISTER_BEGIN';
 export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
@@ -69,8 +70,18 @@ export function fetchCurrentUserAction() {
   }
 }
 
-export function logoutAction() {
+export function logout() {
   return {
     type: LOGOUT, payload: null,
   };
+}
+
+export function logoutAction() {
+  return (dispatch) => {
+    dispatch({
+      type: LOGOUT, payload: null,
+    });
+
+    dispatch({ type: CLEAR_PROFILE, payload: null });
+  }
 }

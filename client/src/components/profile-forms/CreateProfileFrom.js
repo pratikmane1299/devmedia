@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
@@ -29,7 +29,7 @@ const initialState = {
   linkedin: '',
 }
 
-function CreateProfile({ createProfileAction, setAlert }) {
+function CreateProfile({ history, createProfileAction, setAlert }) {
   const [showSocialMediaLinks, toggleSocialMediaLinks] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -68,6 +68,8 @@ function CreateProfile({ createProfileAction, setAlert }) {
       setAlert('Profile created successfully', 'success');
 
       setProfileForm(initialState);
+
+      history.push('/dashboard');
     } catch(error) {
       setLoading(false);
       error.response.data.errors.forEach((err) => {
@@ -253,4 +255,4 @@ function CreateProfile({ createProfileAction, setAlert }) {
   );
 }
 
-export default connect(null, { createProfileAction, setAlert })(CreateProfile);
+export default connect(null, { createProfileAction, setAlert })(withRouter(CreateProfile));
