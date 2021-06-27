@@ -55,7 +55,6 @@ function Register({
         const res = await registerAction(formData);
         registerSuccess(res.token);
         await fetchCurrentUserAction();
-        history.push('/dashboard');
       } catch(error) {
         registerFailure();
         error.response.data.errors.forEach((err) => {

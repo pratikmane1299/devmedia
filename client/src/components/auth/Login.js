@@ -51,7 +51,6 @@ function Login({
 
       loginSuccess(res.token);
       await fetchCurrentUserAction();
-      history.push('/dashboard');
 
     } catch (error) {
       loginFailure();
