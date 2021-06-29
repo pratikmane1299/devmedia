@@ -7,3 +7,7 @@ export function getMyProfile() {
 export function createProfile(profile) {
   return api.post('/api/v1/profile', profile);
 }
+
+export function addExperience(experience) {
+  return api.put('/api/v1/profile/experience', experience);
+}

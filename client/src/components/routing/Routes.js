@@ -7,6 +7,7 @@ import PrivateRoute from './PrivateRoute';
 import Dashboard from '../dashboard/Dashboard';
 import CreateProfile from '../profile-forms/CreateProfileFrom';
 import EditProfile from '../profile-forms/EditProfile';
+import AddExperience from '../profile-forms/AddExperience';
 import Alert from '../Layout/Alert';
 
 function Routes() {
@@ -19,6 +20,7 @@ function Routes() {
         <PrivateRoute exact path="/dashboard" component={Dashboard} />
         <PrivateRoute exact path="/create-profile" component={CreateProfile} />
         <PrivateRoute exact path="/edit-profile" component={EditProfile} />
+        <PrivateRoute exact path="/add-experience" component={AddExperience} />
       </Switch>
     </section>
   );
