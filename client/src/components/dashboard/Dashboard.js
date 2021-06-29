@@ -10,6 +10,7 @@ import  { setAlert } from '../../actions/alert';
 import Spinner from '../Layout/Spinner';
 import DashboardActions from './DashboardActions';
 import Experience from './Experience';
+import Education from './Education';
 
 function Dashboard({ profile, auth, getMyProfileAction, setAlert }) {
 
@@ -44,6 +45,7 @@ function Dashboard({ profile, auth, getMyProfileAction, setAlert }) {
           <>
             <DashboardActions />
             <Experience experience={profile.me.experience} />
+            <Education education={profile.me.education} />
           </>
         ) : (
           <>
