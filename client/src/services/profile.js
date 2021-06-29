@@ -11,3 +11,7 @@ export function createProfile(profile) {
 export function addExperience(experience) {
   return api.put('/api/v1/profile/experience', experience);
 }
+
+export function addEducation(education) {
+  return api.put('/api/v1/profile/education', education);
+}

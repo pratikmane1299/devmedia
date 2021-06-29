@@ -1,4 +1,4 @@
-import { createProfile, getMyProfile, addExperience } from "../services/profile";
+import { createProfile, getMyProfile, addExperience, addEducation } from '../services/profile';
 
 export const FETCH_MY_PROFILE_BEGIN = 'FETCH_MY_PROFILE_BEGIN';
 export const FETCH_MY_PROFILE_SUCCESS = 'FETCH_MY_PROFILE_SUCCESS';
@@ -9,6 +9,8 @@ export const CLEAR_PROFILE = 'CLEAR_PROFILE';
 export const ADD_EXPERIENCE_BEGIN = 'ADD_EXPERIENCE_BEGIN';
 export const ADD_EXPERIENCE_ERROR = 'ADD_EXPERIENCE_ERROR';
 export const UPDATE_PROFILE = 'UPDATE_PROFILE';
+export const ADD_EDUCATION_BEGIN = 'ADD_EDUCATION_BEGIN';
+export const ADD_EDUCATION_ERROR = 'ADD_EDUCATION_ERROR';
 
 export function getMyProfileAction() {
   return (dispatch) => {
@@ -53,5 +55,20 @@ export function addExperienceAction(experience) {
       dispatch({ type: ADD_EXPERIENCE_ERROR, payload: null });
       throw(error);
     });
+  }
+}
+
+export function addEducationAction(education) {
+  return (dispatch) => {
+    dispatch({ type: ADD_EDUCATION_BEGIN, payload: null });
+
+    return addEducation(education)
+      .then(res => {
+        dispatch({ type: UPDATE_PROFILE, payload: res.data })
+      })
+      .catch(error => {
+        dispatch({ type: ADD_EDUCATION_ERROR, payload: null });
+        throw(error);
+      });
   }
 }
