@@ -3,6 +3,7 @@ const { body, validationResult } = require('express-validator');
 const normalizeUrl = require('normalize-url');
 
 const Profile = require('../../models/profile');
+const User = require('../../models/user');
 const isObjectId = require('../../middlewares/isObjectId');
 
 const router = express.Router();
@@ -191,5 +192,19 @@ router.delete('/education/:eduId',
     }
   }
 );
+
+router.delete('/', async (req, res) => {
+  try {
+    await Promise.all([
+      Profile.findOneAndRemove({ user: req.user.id }),
+      User.findOneAndRemove({ _id: req.user.id })
+    ]);
+
+    res.json({ msg: 'Your account has been deleted' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
 
 module.exports = router;

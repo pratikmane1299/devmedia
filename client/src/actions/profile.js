@@ -5,7 +5,9 @@ import {
   addEducation,
   deleteExperience,
   deleteEducation,
+  deleteAccount,
 } from '../services/profile';
+import { ACCOUNT_DELETED } from './auth';
 
 export const FETCH_MY_PROFILE_BEGIN = "FETCH_MY_PROFILE_BEGIN";
 export const FETCH_MY_PROFILE_SUCCESS = "FETCH_MY_PROFILE_SUCCESS";
@@ -107,4 +109,18 @@ export function deleteEducationAction(id) {
         throw error;
       });
   };
+}
+
+export function deleteAccountAction() {
+  return (dispatch) => {
+    return deleteAccount()
+      .then((res) => {
+        dispatch({ type: CLEAR_PROFILE, payload: null });
+        dispatch({ type: ACCOUNT_DELETED, payload: null });
+        return res.data;
+      })
+      .catch((error) => {
+        throw error;
+      });
+  }
 }

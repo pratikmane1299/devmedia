@@ -11,6 +11,7 @@ export const FETCH_CURRENT_USER_BEGIN = 'FETCH_CURRENT_USER_BEGIN';
 export const FETCH_CURRENT_USER_SUCCESS = 'FETCH_CURRENT_USER_SUCCESS';
 export const FETCH_CURRENT_USER_FAILURE = 'FETCH_CURRENT_USER_FAILURE'; 
 export const LOGOUT = 'LOGOUT';
+export const ACCOUNT_DELETED = 'ACCOUNT_DELETED';
 
 export function registerBegin() {
   return { type: REGISTER_BEGIN, payload: null };

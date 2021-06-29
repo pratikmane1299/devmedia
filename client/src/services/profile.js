@@ -23,3 +23,8 @@ export function deleteExperience(id) {
 export function deleteEducation(id) {
   return api.delete(`/api/v1/profile/education/${id}`);
 }
+
+export function deleteAccount() {
+  return api.delete(`/api/v1/profile/`);
+}
+

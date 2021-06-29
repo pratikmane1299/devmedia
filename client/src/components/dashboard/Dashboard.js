@@ -2,9 +2,9 @@ import React, {useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faUserMinus } from '@fortawesome/free-solid-svg-icons';
 
-import { getMyProfileAction } from '../../actions/profile';
+import { getMyProfileAction, deleteAccountAction } from '../../actions/profile';
 import  { setAlert } from '../../actions/alert';
 
 import Spinner from '../Layout/Spinner';
@@ -12,26 +12,29 @@ import DashboardActions from './DashboardActions';
 import Experience from './Experience';
 import Education from './Education';
 
-function Dashboard({ profile, auth, getMyProfileAction, setAlert }) {
-
+function Dashboard({
+  profile,
+  auth,
+  getMyProfileAction,
+  setAlert,
+  deleteAccountAction,
+}) {
   useEffect(() => {
-    getMyProfileAction()
-      .catch(error => {
-        switch (error.response.status) {
-          case 404:
-            setAlert(error.response.data.msg, 'primary');
-            break;
-          case 500:
-          default:
-            setAlert(error.response.statusText, 'danger');
-            break;
-        }
-      });
+    getMyProfileAction().catch((error) => {
+      switch (error.response.status) {
+        case 404:
+          setAlert(error.response.data.msg, "primary");
+          break;
+        case 500:
+        default:
+          setAlert(error.response.statusText, "danger");
+          break;
+      }
+    });
   }, [getMyProfileAction, setAlert]);
 
-
   if (profile.loading) {
-    return <Spinner />
+    return <Spinner />;
   }
 
   return (
@@ -46,6 +49,30 @@ function Dashboard({ profile, auth, getMyProfileAction, setAlert }) {
             <DashboardActions />
             <Experience experience={profile.me.experience} />
             <Education education={profile.me.education} />
+            <div className="my-2">
+              <button className="btn btn-danger" onClick={async (e) => {
+                e.preventDefault();
+                if (window.confirm('Do you really want to delete ? This cannot be undone !!!')) {
+                  try {
+                    const res = await deleteAccountAction();
+                    setAlert(res.msg, 'success');
+                  } catch(error) {
+                    switch (error.response.status) {
+                      case 404:
+                        setAlert(error.response.data.msg, 'primary');
+                        break;
+                      case 500:
+                      default:
+                        setAlert(error.response.statusText, 'danger');
+                        break;
+                    }
+                  }
+                }
+              }}>
+                <FontAwesomeIcon icon={faUserMinus} />{' '}
+                Delete My Account
+              </button>
+            </div>
           </>
         ) : (
           <>
@@ -67,4 +94,8 @@ function mapStateToProps(store) {
   };
 }
 
-export default connect(mapStateToProps, { getMyProfileAction, setAlert })(Dashboard);
+export default connect(mapStateToProps, {
+  getMyProfileAction,
+  setAlert,
+  deleteAccountAction,
+})(Dashboard);

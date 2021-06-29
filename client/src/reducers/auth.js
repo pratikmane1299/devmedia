@@ -9,6 +9,7 @@ import {
   FETCH_CURRENT_USER_SUCCESS,
   FETCH_CURRENT_USER_FAILURE,
   LOGOUT,
+  ACCOUNT_DELETED,
 } from '../actions/auth';
 
 const initialState = {
@@ -41,6 +42,7 @@ export default function authReducer(state = initialState, action) {
     case LOGIN_FAIL:
     case FETCH_CURRENT_USER_FAILURE:
     case LOGOUT:
+    case ACCOUNT_DELETED:
       localStorage.removeItem('token');
       return { ...state, isAuthenticated: false, loading: false, token: null, user: null };
     
