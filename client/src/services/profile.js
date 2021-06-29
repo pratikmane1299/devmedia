@@ -19,3 +19,7 @@ export function addEducation(education) {
 export function deleteExperience(id) {
   return api.delete(`/api/v1/profile/experience/${id}`);
 }
+
+export function deleteEducation(id) {
+  return api.delete(`/api/v1/profile/education/${id}`);
+}
