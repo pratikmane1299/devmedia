@@ -6,6 +6,7 @@ import {
   CLEAR_PROFILE,
   CREATE_PROFILE_BEGIN,
   CREATE_PROFILE_ERROR,
+  DELETE_EXPERIENCE_ERROR,
   FETCH_MY_PROFILE_BEGIN,
   FETCH_MY_PROFILE_FAILURE,
   FETCH_MY_PROFILE_SUCCESS,
@@ -41,6 +42,7 @@ export default function profileReducer(state = initialState, action) {
 
     case ADD_EXPERIENCE_ERROR:
     case ADD_EDUCATION_ERROR:
+    case DELETE_EXPERIENCE_ERROR:
       return { ...state, loading: false };
 
     case UPDATE_PROFILE:

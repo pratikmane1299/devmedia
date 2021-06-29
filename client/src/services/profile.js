@@ -15,3 +15,7 @@ export function addExperience(experience) {
 export function addEducation(education) {
   return api.put('/api/v1/profile/education', education);
 }
+
+export function deleteExperience(id) {
+  return api.delete(`/api/v1/profile/experience/${id}`);
+}

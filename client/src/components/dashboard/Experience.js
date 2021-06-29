@@ -1,8 +1,25 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
+import { deleteExperienceAction } from '../../actions/profile';
+import { setAlert } from '../../actions/alert';
 import formatDate from '../../utils/formatDate';
 
-export const Experience = ({ experience }) => {
+export const Experience = ({ experience, deleteExperienceAction, setAlert }) => {
+
+  async function handleOnExperienceDelete(id) {
+    try {
+      await deleteExperienceAction(id);
+      setAlert('Experience deleted', 'success');
+    } catch (error) {
+      switch (error.response.status) {
+        case 500:
+        default:
+          setAlert(error.response.statusText, 'danger');
+          break;
+      }
+    }
+  }
 
   const experiences = experience.map((ex) => (
     <tr key={ex._id}>
@@ -12,7 +29,10 @@ export const Experience = ({ experience }) => {
         {formatDate(ex.from)} - {ex.to ? formatDate(ex.to) : 'Now'}
       </td>
       <td>
-        <button className="btn btn-danger">
+        <button className="btn btn-danger" onClick={(e) => {
+          e.preventDefault();
+          handleOnExperienceDelete(ex._id);
+        }}>
           Delete
         </button>
       </td>
@@ -39,4 +59,4 @@ export const Experience = ({ experience }) => {
   );
 }
 
-export default Experience;
+export default connect(null, { deleteExperienceAction, setAlert })(Experience);
