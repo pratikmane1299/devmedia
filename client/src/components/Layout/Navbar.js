@@ -10,6 +10,9 @@ function Navbar({ auth: { loading, isAuthenticated }, logoutAction }) {
   const authLinks = (
     <ul>
       <li>
+        <Link to="/profiles">Developers</Link>
+      </li>
+      <li>
         <Link to="dashboard">
           <FontAwesomeIcon icon={faUser} />{' '}
           <span className="hide-sm">Dashboard</span>
@@ -26,9 +29,6 @@ function Navbar({ auth: { loading, isAuthenticated }, logoutAction }) {
 
   const guestLinks = (
     <ul>
-      <li>
-        <Link>Developers</Link>
-      </li>
       <li>
         <Link to="/register">Register</Link>
       </li>

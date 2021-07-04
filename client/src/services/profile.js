@@ -28,3 +28,6 @@ export function deleteAccount() {
   return api.delete(`/api/v1/profile/`);
 }
 
+export function fetchProfiles() {
+  return api.get('/api/v1/profile');
+}

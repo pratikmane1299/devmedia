@@ -9,6 +9,7 @@ import CreateProfile from '../profile-forms/CreateProfileFrom';
 import EditProfile from '../profile-forms/EditProfile';
 import AddExperience from '../profile-forms/AddExperience';
 import AddEducation from '../profile-forms/AddEducation';
+import Profiles from '../profiles/Profiles';
 import Alert from '../Layout/Alert';
 
 function Routes() {
@@ -22,7 +23,8 @@ function Routes() {
         <PrivateRoute exact path="/create-profile" component={CreateProfile} />
         <PrivateRoute exact path="/edit-profile" component={EditProfile} />
         <PrivateRoute exact path="/add-experience" component={AddExperience} />
-        <PrivateRoute exact path="/add-education" component={AddEducation} />ks
+        <PrivateRoute exact path="/add-education" component={AddEducation} />
+        <PrivateRoute exact path="/profiles" component={Profiles} />
       </Switch>
     </section>
   );

@@ -12,6 +12,9 @@ import {
   FETCH_MY_PROFILE_FAILURE,
   FETCH_MY_PROFILE_SUCCESS,
   UPDATE_PROFILE,
+  FETCH_PROFILES_BEGIN,
+  FETCH_PROFILES_SUCCESS,
+  FETCH_PROFILES_ERROR,
 } from '../actions/profile';
 
 const initialState = {
@@ -29,6 +32,7 @@ export default function profileReducer(state = initialState, action) {
     case CREATE_PROFILE_BEGIN:
     case ADD_EXPERIENCE_BEGIN:
     case ADD_EDUCATION_BEGIN:
+    case FETCH_PROFILES_BEGIN:
       return { ...state, loading: true };
 
     case FETCH_MY_PROFILE_SUCCESS:
@@ -48,7 +52,13 @@ export default function profileReducer(state = initialState, action) {
       return { ...state, loading: false };
 
     case UPDATE_PROFILE:
-      return { ...state, loading: false, me: payload }
+      return { ...state, loading: false, me: payload };
+    
+    case FETCH_PROFILES_SUCCESS:
+      return { ...state, loading: false, profiles: payload };
+    
+    case FETCH_PROFILES_ERROR:
+      return { ...state, loading: false, profiles: [] };
 
     default:
       return state;

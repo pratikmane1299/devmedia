@@ -6,6 +6,7 @@ import {
   deleteExperience,
   deleteEducation,
   deleteAccount,
+  fetchProfiles,
 } from '../services/profile';
 import { ACCOUNT_DELETED } from './auth';
 
@@ -23,6 +24,9 @@ export const ADD_EDUCATION_ERROR = "ADD_EDUCATION_ERROR";
 export const DELETE_EXPERIENCE_BEGIN = "DELETE_EXPERIENCE_BEGIN";
 export const DELETE_EXPERIENCE_ERROR = "DELETE_EXPERIENCE_ERROR";
 export const DELETE_EDUCATION_ERROR = "DELETE_EDUCATION_ERROR";
+export const FETCH_PROFILES_BEGIN = 'FETCH_PROFILES_BEGIN';
+export const FETCH_PROFILES_SUCCESS =  'FETCH_PROFILES_SUCCESS';
+export const FETCH_PROFILES_ERROR = 'FETCH_PROFILES_ERROR';
 
 export function getMyProfileAction() {
   return (dispatch) => {
@@ -120,6 +124,21 @@ export function deleteAccountAction() {
         return res.data;
       })
       .catch((error) => {
+        throw error;
+      });
+  }
+}
+
+export function fetchProfilesAction() {
+  return (dispatch) => {
+    dispatch({ type: FETCH_PROFILES_BEGIN, payload: null });
+
+    return fetchProfiles()
+      .then((res) => {
+        dispatch({ type: FETCH_PROFILES_SUCCESS, payload: res.data });
+      })
+      .catch((error) => {
+        dispatch({ type: FETCH_PROFILES_ERROR, payload: null });
         throw error;
       });
   }
