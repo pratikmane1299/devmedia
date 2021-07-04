@@ -15,11 +15,15 @@ import {
   FETCH_PROFILES_BEGIN,
   FETCH_PROFILES_SUCCESS,
   FETCH_PROFILES_ERROR,
+  FETCH_SINGLE_PROFILE_BEGIN,
+  FETCH_SINGLE_PROFILE_SUCCESS,
+  FETCH_SINGLE_PROFILE_ERROR,
 } from '../actions/profile';
 
 const initialState = {
   me: null,
   profiles: [],
+  profile: null,
   repos: [],
   loading: false,
 };
@@ -33,6 +37,7 @@ export default function profileReducer(state = initialState, action) {
     case ADD_EXPERIENCE_BEGIN:
     case ADD_EDUCATION_BEGIN:
     case FETCH_PROFILES_BEGIN:
+    case FETCH_SINGLE_PROFILE_BEGIN:
       return { ...state, loading: true };
 
     case FETCH_MY_PROFILE_SUCCESS:
@@ -56,9 +61,15 @@ export default function profileReducer(state = initialState, action) {
     
     case FETCH_PROFILES_SUCCESS:
       return { ...state, loading: false, profiles: payload };
+
+    case FETCH_SINGLE_PROFILE_SUCCESS:
+      return { ...state, loading: false, profile: payload };
     
     case FETCH_PROFILES_ERROR:
       return { ...state, loading: false, profiles: [] };
+    
+    case FETCH_SINGLE_PROFILE_ERROR:
+      return { ...state, loading: false, profile: null };
 
     default:
       return state;

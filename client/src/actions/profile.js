@@ -7,6 +7,7 @@ import {
   deleteEducation,
   deleteAccount,
   fetchProfiles,
+  fetchSingleProfile,
 } from '../services/profile';
 import { ACCOUNT_DELETED } from './auth';
 
@@ -27,6 +28,9 @@ export const DELETE_EDUCATION_ERROR = "DELETE_EDUCATION_ERROR";
 export const FETCH_PROFILES_BEGIN = 'FETCH_PROFILES_BEGIN';
 export const FETCH_PROFILES_SUCCESS =  'FETCH_PROFILES_SUCCESS';
 export const FETCH_PROFILES_ERROR = 'FETCH_PROFILES_ERROR';
+export const FETCH_SINGLE_PROFILE_BEGIN = 'FETCH_SINGLE_PROFILE_BEGIN';
+export const FETCH_SINGLE_PROFILE_SUCCESS =  'FETCH_SINGLE_PROFILE_SUCCESS';
+export const FETCH_SINGLE_PROFILE_ERROR = 'FETCH_SINGLE_PROFILE_ERROR';
 
 export function getMyProfileAction() {
   return (dispatch) => {
@@ -139,6 +143,21 @@ export function fetchProfilesAction() {
       })
       .catch((error) => {
         dispatch({ type: FETCH_PROFILES_ERROR, payload: null });
+        throw error;
+      });
+  }
+}
+
+export function fetchProfileAction(id) {
+  return (dispatch) => {
+    dispatch({ type: FETCH_SINGLE_PROFILE_BEGIN, payload: null });
+
+    return fetchSingleProfile(id)
+      .then((res) => {
+        dispatch({ type: FETCH_SINGLE_PROFILE_SUCCESS, payload: res.data });
+      })
+      .catch((error) => {
+        dispatch({ type: FETCH_SINGLE_PROFILE_ERROR, payload: null });
         throw error;
       });
   }

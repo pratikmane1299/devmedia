@@ -31,3 +31,7 @@ export function deleteAccount() {
 export function fetchProfiles() {
   return api.get('/api/v1/profile');
 }
+
+export function fetchSingleProfile(id) {
+  return api.get(`/api/v1/profile/${id}`);
+}
