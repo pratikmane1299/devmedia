@@ -50,4 +50,24 @@ router.post('/', auth, [
   }
 });
 
+router.delete('/:postId', auth, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.postId);
+
+    if (!post) return res.status(404).json({ msg: 'Post not found !!!' });
+
+    if (post.user.toString() !== req.user.id) {
+      return res.status(404).json({ msg: 'Not authorized to delete post !!!' });
+    }
+
+    await Post.deleteOne({ _id: req.params.postId });
+
+    return res.json({ _id: req.params.postId });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send('Internal server error');
+  }
+});
+
 module.exports = router;
