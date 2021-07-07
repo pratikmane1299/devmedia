@@ -17,6 +17,19 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
+router.get('/:postId', auth, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.postId);
+
+    if (!post) return res.status(404).json({ msg: 'Post not found !!!' });
+
+    return res.json(post);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send('Internal server error');
+  }
+});
+
 router.post('/', auth, [
   check('text', 'Text is required').not().isEmpty(),
 ], async (req, res) => {
