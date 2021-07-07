@@ -11,6 +11,7 @@ import AddExperience from '../profile-forms/AddExperience';
 import AddEducation from '../profile-forms/AddEducation';
 import Profiles from '../profiles/Profiles';
 import Profile from '../profile/Profile';
+import Posts from '../posts/Posts';
 import Alert from '../Layout/Alert';
 
 function Routes() {
@@ -27,6 +28,7 @@ function Routes() {
         <PrivateRoute exact path="/add-education" component={AddEducation} />
         <PrivateRoute exact path="/profiles" component={Profiles} />
         <PrivateRoute path="/profiles/:id" component={Profile} />
+        <PrivateRoute exact path="/posts" component={Posts} />
       </Switch>
     </section>
   );

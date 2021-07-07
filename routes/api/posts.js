@@ -8,7 +8,9 @@ const Post = require('../../models/post');
 router.get('/', auth, async (req, res) => {
 
   try {
-    const posts = await Post.find().sort({ date: -1 });
+    const posts = await Post.find()
+      .populate('user', ['name', 'avatar'])
+      .sort({ date: -1 });
     return res.json(posts);
 
   } catch (error) {
