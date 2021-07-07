@@ -5,8 +5,16 @@ const { check, validationResult } = require('express-validator');
 const auth = require('../../middlewares/veifyJwt');
 const Post = require('../../models/post');
 
-router.get('/', (req, res) => {
-  res.json({ message: 'Posts route'})
+router.get('/', auth, async (req, res) => {
+
+  try {
+    const posts = await Post.find().sort({ date: -1 });
+    return res.json(posts);
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send('Internal server error');  
+  }
 });
 
 router.post('/', auth, [
