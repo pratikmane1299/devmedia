@@ -43,7 +43,9 @@ router.post('/', auth, [
   }
 
   try {
-    const newPost = await Post.create({ text: req.body.text, user: req.user.id });
+    let newPost = await Post.create({ text: req.body.text, user: req.user.id });
+
+    newPost = await newPost.populate('user', 'name avatar').execPopulate();
 
     return res.json(newPost);
   } catch (error) {

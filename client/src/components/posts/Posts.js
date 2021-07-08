@@ -6,6 +6,7 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { fetchAllPostsAction } from '../../actions/posts';
 import Spinner from '../Layout/Spinner';
 import PostItem from './PostItem';
+import PostForm from './PostForm';
 
 export const Posts = ({ posts, fetchAllPostsAction }) => {
 
@@ -23,6 +24,7 @@ export const Posts = ({ posts, fetchAllPostsAction }) => {
           <p className="lead">
             <FontAwesomeIcon icon={faUser} /> Welcome to the community.
           </p>
+          <PostForm />
           <div className="posts">
             {posts.posts.map((post) => (
               <PostItem key={post._id} post={post} />
