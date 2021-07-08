@@ -7,3 +7,7 @@ export function fetchAllPosts() {
 export function addPost(post) {
   return api.post('/api/v1/posts', post);
 }
+
+export function deletePost(id) {
+  return api.delete(`/api/v1/posts/${id}`);
+}

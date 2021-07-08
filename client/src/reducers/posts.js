@@ -1,4 +1,4 @@
-import { FETCH_ALL_POSTS_BEGIN, FETCH_ALL_POSTS_SUCCESS, FETCH_ALL_POSTS_FAILURE, ADD_POST_SUCCESS } from "../actions/posts";
+import { FETCH_ALL_POSTS_BEGIN, FETCH_ALL_POSTS_SUCCESS, FETCH_ALL_POSTS_FAILURE, ADD_POST_SUCCESS, DELETE_POST_SUCCESS } from "../actions/posts";
 
 const initialState = {
   posts: [],
@@ -18,6 +18,9 @@ export default function postsReducer(state = initialState, action) {
       
       case ADD_POST_SUCCESS:
         return { ...state, posts: [payload, ...state.posts ]};
+
+      case DELETE_POST_SUCCESS:
+        return { ...state, posts: state.posts.filter(post => post._id !== payload) };
 
       case FETCH_ALL_POSTS_FAILURE:
         return { ...state, loading: false };
