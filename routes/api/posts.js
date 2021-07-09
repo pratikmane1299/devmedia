@@ -74,4 +74,27 @@ router.delete('/:postId', auth, async (req, res) => {
   }
 });
 
+router.put('/:postId/likeUnLike', auth, async (req, res) => {
+  try {
+
+    const post = await Post.findById(req.params.postId);
+
+    if (!post) return res.status(404).json({ msg: 'Post not found !!!' });
+
+    if (post.likes.some(id => id.toString() === req.user.id)) {
+      post.likes = post.likes.filter(userId => userId.toString() !== req.user.id)
+    } else  {
+      post.likes.push(req.user.id)
+    }
+
+    await post.save();
+
+    return res.json({ likes: post.likes });
+
+  } catch(error) {
+    console.log(error);
+    return res.status(500).send('Internal server error');
+  }
+});
+
 module.exports = router;
