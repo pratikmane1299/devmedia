@@ -11,3 +11,7 @@ export function addPost(post) {
 export function deletePost(id) {
   return api.delete(`/api/v1/posts/${id}`);
 }
+
+export function likeUnLikePost(postId) {
+  return api.put(`/api/v1/posts/${postId}/likeUnLike`);
+}

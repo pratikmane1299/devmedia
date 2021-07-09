@@ -2,14 +2,19 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faHeart } from '@fortawesome/free-solid-svg-icons';
 
 import formatDate from '../../utils/formatDate';
-import { deletePostAction } from '../../actions/posts';
+import { deletePostAction, likeUnLikeAction } from '../../actions/posts';
 import { setAlert } from '../../actions/alert';
 
-function PostItem({ auth, post, deletePostAction, setAlert }) {
-
+function PostItem({
+  auth,
+  post,
+  deletePostAction,
+  likeUnLikeAction,
+  setAlert,
+}) {
   async function handleOnDelete(postId) {
     try {
       await deletePostAction(postId);
@@ -21,6 +26,10 @@ function PostItem({ auth, post, deletePostAction, setAlert }) {
           break;
       }
     }
+  }
+
+  function handleLikeUnLike(postId) {
+    likeUnLikeAction(postId);
   }
 
   return (
@@ -38,11 +47,29 @@ function PostItem({ auth, post, deletePostAction, setAlert }) {
       <div>
         <p className="my-1">{post.text}</p>
         <p className="post-date">Posted on {formatDate(post.date)}</p>
-        {auth.isAuthenticated && auth.user._id === post.user._id && (
-          <button type="button" className="btn btn-danger" onClick={(e)  => {
+        <button
+          type="button"
+          className="btn btn-light"
+          onClick={(e) => {
             e.preventDefault();
-            handleOnDelete(post._id);
-          }}>
+            handleLikeUnLike(post._id);
+          }}
+        >
+          <FontAwesomeIcon
+            className={post.likes.includes(auth.user._id) ? "post-liked" : ""}
+            icon={faHeart}
+          />
+          {post.likes.length > 0 && <span>{post.likes.length}</span>}
+        </button>
+        {auth.isAuthenticated && auth.user._id === post.user._id && (
+          <button
+            type="button"
+            className="btn btn-danger"
+            onClick={(e) => {
+              e.preventDefault();
+              handleOnDelete(post._id);
+            }}
+          >
             <FontAwesomeIcon icon={faTimes} />
           </button>
         )}
@@ -55,4 +82,8 @@ function mapStateToProps(store) {
   return { auth: store.auth };
 }
 
-export default connect(mapStateToProps, { deletePostAction, setAlert })(PostItem);
+export default connect(mapStateToProps, {
+  deletePostAction,
+  likeUnLikeAction,
+  setAlert,
+})(PostItem);

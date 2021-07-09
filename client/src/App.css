@@ -482,6 +482,10 @@ button {
   font-size: 0.8rem;
 }
 
+.post-liked {
+  color: #D44D5C;
+}
+
 .post .post-date {
   color: #aaa;
   font-size: 0.8rem;
