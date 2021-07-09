@@ -10,6 +10,7 @@ router.get('/', auth, async (req, res) => {
   try {
     const posts = await Post.find()
       .populate('user', ['name', 'avatar'])
+      .populate('comments.user', ['name', 'avatar'])
       .sort({ date: -1 });
     return res.json(posts);
 
@@ -96,5 +97,37 @@ router.put('/:postId/likeUnLike', auth, async (req, res) => {
     return res.status(500).send('Internal server error');
   }
 });
+
+router.post('/:postId/add-comment',
+  auth, [
+    check('text', 'Comment is required').notEmpty(),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+      const post = await Post.findById(req.params.postId);
+
+      if (!post) return res.json({ msg: 'Post not found !!!' });
+
+      post.comments.unshift({
+        user: req.user.id,
+        text: req.body.text,
+      });
+
+      await post.save();
+
+      return res.json(post.comments);
+
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send('Internal server error');
+    }
+  }
+);
 
 module.exports = router;
