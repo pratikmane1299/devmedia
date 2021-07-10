@@ -4,6 +4,7 @@ const normalizeUrl = require('normalize-url');
 
 const Profile = require('../../models/profile');
 const User = require('../../models/user');
+const Post = require('../../models/post');
 const isObjectId = require('../../middlewares/isObjectId');
 
 const router = express.Router();
@@ -206,6 +207,7 @@ router.delete('/education/:eduId',
 router.delete('/', async (req, res) => {
   try {
     await Promise.all([
+      Post.deleteMany({ user: req.user.id }),
       Profile.findOneAndRemove({ user: req.user.id }),
       User.findOneAndRemove({ _id: req.user.id })
     ]);
