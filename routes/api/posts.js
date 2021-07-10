@@ -110,7 +110,7 @@ router.post('/:postId/add-comment',
     }
 
     try {
-      const post = await Post.findById(req.params.postId);
+      let post = await Post.findById(req.params.postId);
 
       if (!post) return res.json({ msg: 'Post not found !!!' });
 
@@ -120,6 +120,8 @@ router.post('/:postId/add-comment',
       });
 
       await post.save();
+
+      post = await post.populate('comments.user', 'name avatar').execPopulate();
 
       return res.json(post.comments);
 
