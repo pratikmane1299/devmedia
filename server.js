@@ -1,5 +1,7 @@
 require('dotenv').config();
 const express = require('express');
+const helmet = require('helmet');
+const cors = require('cors');
 
 const apiRouter = require('./routes/api');
 const connectToDB = require('./db/db');
@@ -8,6 +10,8 @@ const app = express();
 
 const PORT = process.env.PORT || 3030;
 
+app.use(cors());
+app.use(helmet());
 app.use(express.json());
 
 connectToDB(process.env.MONGODB_URI)
