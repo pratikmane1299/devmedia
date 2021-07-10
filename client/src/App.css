@@ -504,6 +504,69 @@ button {
   border-radius: 4px;
 }
 
+.post-comments {
+  margin-left: 30px;
+}
+
+.post-comment-bullet {
+  display: flex;
+  position: absolute;
+  flex: 0 0 auto;
+  top: 50%;
+  left: 0px;
+  min-height: 50%;
+  border-top: 1px solid rgba(0,0,0,0.14);
+  width: 30px;
+}
+
+.comment-container {
+  display: flex;
+  position: relative;
+  border-left: 1px solid rgba(0,0,0,0.14);
+}
+
+.comment {
+  padding: 0 .5rem;
+  margin: 1rem 0 30px 30px;
+  border-left: 2px solid #bc9be0;
+  background: rgba(255,255,255,0.8);
+  border-radius: 4px;
+  border: 1px solid rgba(0,0,0,0.1);
+  padding: 30px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.comment .round-img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+}
+.comment .comment-user-info {
+  text-align: center;
+}
+
+.comment .comment-description {
+  padding-left: 1rem;
+}
+
+.comment-container:last-child::after  {
+  content: "";
+  position: absolute;
+  background-color: #fff;
+  color: red;
+  font-weight: bold;
+  top: calc(50% + 1px);
+  height: 50%;
+  left: -1px;
+  width: 2px;
+}
+
+.comments-actions {
+  margin-top: 0.5rem;
+}
+
 /* Mobile Styles */
 @media (max-width: 700px) {
   .container {

@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
@@ -14,6 +15,29 @@ export const Posts = ({ posts, fetchAllPostsAction }) => {
     fetchAllPostsAction();
   }, [fetchAllPostsAction]);
 
+  function generateComments(comments) {
+    return comments.map((comment) => (
+      <div className="comment-container">
+        <div className="post-comment-bullet"></div>
+        <div className="comment">
+          <div className="comment-user-info">
+            <Link to={`/profiles/${comment.user._id}`}>
+              <img
+                className="round-img"
+                src={comment.user.avatar}
+                alt={comment.user.name}
+              />
+              <h4>{comment.user.name}</h4>
+            </Link>
+          </div>
+          <div className="comment-description">
+            <p>{comment.text}</p>
+          </div>
+        </div>
+      </div>
+    ));
+  }
+
   return (
     <div>
       {posts.loading ? (
@@ -27,7 +51,10 @@ export const Posts = ({ posts, fetchAllPostsAction }) => {
           <PostForm />
           <div className="posts">
             {posts.posts.map((post) => (
-              <PostItem key={post._id} post={post} />
+              <div className="post-container">
+                <PostItem key={post._id} post={post} />
+                <div className="post-comments">{generateComments(post.comments)}</div>
+              </div>
             ))}
           </div>
         </div>
