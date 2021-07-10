@@ -5,6 +5,7 @@ import {
   ADD_POST_SUCCESS,
   DELETE_POST_SUCCESS,
   UPDATE_LIKES,
+  ADD_COMMENT,
 } from '../actions/posts';
 
 const initialState = {
@@ -43,6 +44,17 @@ export default function postsReducer(state = initialState, action) {
       });
 
       return { ...state, posts: updatedPosts };
+
+    case ADD_COMMENT:
+      const modifiedPosts = state.posts.map((post) => {
+        if (post._id === payload.id) {
+          return {
+            ...post,
+            comments: payload.comments,
+          }
+        } else return post;
+      })
+      return { ...state, posts: modifiedPosts };
 
     case FETCH_ALL_POSTS_FAILURE:
       return { ...state, loading: false };

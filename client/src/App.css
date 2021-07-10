@@ -245,12 +245,12 @@ img {
   color: #888;
 }
 
-.form input[type='text'],
-.form input[type='email'],
-.form input[type='password'],
-.form input[type='date'],
-.form select,
-.form textarea {
+input[type='text'],
+input[type='email'],
+input[type='password'],
+input[type='date'],
+select,
+textarea {
   display: block;
   width: 100%;
   padding: 0.4rem;
@@ -490,6 +490,18 @@ button {
   color: #aaa;
   font-size: 0.8rem;
   margin-bottom: 0.5rem;
+}
+
+.post-comment-edit {
+  margin-top: 0.5rem;
+  display: flex;
+  flex: 1 1 auto;
+}
+
+.post-comment-edit .post-comment-input-field {
+  display: flex;
+  flex: 1 1 auto;
+  border-radius: 4px;
 }
 
 /* Mobile Styles */

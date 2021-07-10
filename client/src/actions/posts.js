@@ -3,6 +3,7 @@ import {
   addPost,
   deletePost,
   likeUnLikePost,
+  addComment,
 } from '../services/posts';
 import { setAlert } from './alert';
 
@@ -12,6 +13,7 @@ export const FETCH_ALL_POSTS_FAILURE = 'FETCH_ALL_POSTS_FAILURE';
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
 export const DELETE_POST_SUCCESS = 'DELETE_POST_SUCCESS';
 export const UPDATE_LIKES = 'UPDATE_LIKES';
+export const ADD_COMMENT = 'ADD_COMMENT';
 
 export function fetchAllPostsAction() {
   return async (dispatch) => {
@@ -61,7 +63,16 @@ export function likeUnLikeAction(postId) {
         });
       })
       .catch((error) => {
-        setAlert(error.response.status.statusText, "danger");
+        setAlert(error.response.status.statusText, 'danger');
       });
   };
+}
+
+export function addCommentAction(postId, comment) {
+  return (dispatch) => {
+    return addComment(postId, comment)
+      .then(res => {
+        dispatch({ type: ADD_COMMENT, payload: { id: postId, comments: res.data } });
+      })
+  }
 }

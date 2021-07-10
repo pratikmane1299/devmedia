@@ -15,3 +15,7 @@ export function deletePost(id) {
 export function likeUnLikePost(postId) {
   return api.put(`/api/v1/posts/${postId}/likeUnLike`);
 }
+
+export function addComment(postId, comment) {
+  return api.post(`/api/v1/posts/${postId}/add-comment`, comment);
+}
