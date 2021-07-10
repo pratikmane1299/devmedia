@@ -52,20 +52,33 @@ function EditProfile({ profile: { me }, history, createProfileAction, setAlert }
 
   useEffect(() => {
     setProfileForm({
-      company: !me.company ? '' : me.company,
-      location: !me.location ? '' : me.location,
-      status: !me.status ? '' : me.status,
-      githubusername: !me.githubusername ? '' : me.githubusername,
-      bio: !me.bio ? '' : me.bio,
-      website: !me.website ? '' : me.website,
-      skills: !me.skills ? '' : me.skills.join(','),
-      youtube: !me.social.youtube ? '' : me.social.youtube,
-      facebook: !me.social.facebook ? '' : me.social.facebook,
-      twitter: !me.social.twitter ? '' : me.social.twitter,
-      instagram: !me.social.instagram ? '' : me.social.instagram,
-      linkedin: !me.social.linkedin ? '' : me.social.linkedin,
+      company: !me.company ? "" : me.company,
+      location: !me.location ? "" : me.location,
+      status: !me.status ? "" : me.status,
+      githubusername: !me.githubusername ? "" : me.githubusername,
+      bio: !me.bio ? "" : me.bio,
+      website: !me.website ? "" : me.website,
+      skills: !me.skills ? "" : me.skills.join(","),
+      youtube: !me.social.youtube ? "" : me.social.youtube,
+      facebook: !me.social.facebook ? "" : me.social.facebook,
+      twitter: !me.social.twitter ? "" : me.social.twitter,
+      instagram: !me.social.instagram ? "" : me.social.instagram,
+      linkedin: !me.social.linkedin ? "" : me.social.linkedin,
     });
-  }, [])
+  }, [
+    me.bio,
+    me.company,
+    me.githubusername,
+    me.location,
+    me.skills,
+    me.social.facebook,
+    me.social.instagram,
+    me.social.linkedin,
+    me.social.twitter,
+    me.social.youtube,
+    me.status,
+    me.website,
+  ]);
 
   function handleOnChange(e) {
     setProfileForm((prev) => ({
