@@ -35,7 +35,7 @@ function Register({
   const { name, email, password, confirmPassword } = formData;
 
   if (isAuthenticated) {
-    return <Redirect to="/dashboard" />
+    return <Redirect to="/posts" />
   }
 
   const handleChange = (e) => {

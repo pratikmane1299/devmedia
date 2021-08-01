@@ -33,7 +33,7 @@ function Login({
   const { email, password } = loginForm;
 
   if (isAuthenticated) {
-    return <Redirect to="/dashboard" />
+    return <Redirect to="/posts" />
   }
 
   const handleOnChange = (e) => {
