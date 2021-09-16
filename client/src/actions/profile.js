@@ -1,3 +1,4 @@
+import { fetchUsersPosts, deletePost } from '../services/posts';
 import {
   createProfile,
   getMyProfile,
@@ -6,9 +7,11 @@ import {
   deleteExperience,
   deleteEducation,
   deleteAccount,
-  fetchProfiles,
+  fetchDevelopers,
   fetchSingleProfile,
+  followUser,
 } from '../services/profile';
+import { fetchMyFollowing } from '../services/auth';
 import { ACCOUNT_DELETED } from './auth';
 
 export const FETCH_MY_PROFILE_BEGIN = "FETCH_MY_PROFILE_BEGIN";
@@ -31,6 +34,13 @@ export const FETCH_PROFILES_ERROR = 'FETCH_PROFILES_ERROR';
 export const FETCH_SINGLE_PROFILE_BEGIN = 'FETCH_SINGLE_PROFILE_BEGIN';
 export const FETCH_SINGLE_PROFILE_SUCCESS =  'FETCH_SINGLE_PROFILE_SUCCESS';
 export const FETCH_SINGLE_PROFILE_ERROR = 'FETCH_SINGLE_PROFILE_ERROR';
+export const FOLLOW_USER_BEGIN = 'FOLLOW_USER_BEGIN';
+export const FOLLOW_USER_SUCCESS = 'FOLLOW_USER_SUCCESS';
+export const FETCH_USERS_POSTS_SUCCESS = 'FETCH_USERS_POSTS_SUCCESS';
+export const FETCH_USERS_POSTS_ERROR = 'FETCH_USERS_POSTS_ERROR';
+export const DELETE_POST_SUCCESS = 'DELETE_POST_SUCCESS';
+export const FETCH_MY_FOLLOWING_BEGIN = 'FETCH_MY_FOLLOWING';
+export const FETCH_MY_FOLLOWING_SUCCESS = 'FETCH_MY_FOLLOWING_SUCCESS';
 
 export function getMyProfileAction() {
   return (dispatch) => {
@@ -80,10 +90,13 @@ export function addExperienceAction(experience) {
 
 export function addEducationAction(education) {
   return (dispatch) => {
-    dispatch({ type: ADD_EDUCATION_BEGIN, payload: null });
+    // dispatch({ type: ADD_EDUCATION_BEGIN, payload: null });
 
     return addEducation(education)
       .then((res) => {
+
+        console.log(res.data);
+
         dispatch({ type: UPDATE_PROFILE, payload: res.data });
       })
       .catch((error) => {
@@ -133,11 +146,11 @@ export function deleteAccountAction() {
   }
 }
 
-export function fetchProfilesAction() {
+export function fetchDevelopersAction() {
   return (dispatch) => {
     dispatch({ type: FETCH_PROFILES_BEGIN, payload: null });
 
-    return fetchProfiles()
+    return fetchDevelopers()
       .then((res) => {
         dispatch({ type: FETCH_PROFILES_SUCCESS, payload: res.data });
       })
@@ -158,6 +171,62 @@ export function fetchProfileAction(id) {
       })
       .catch((error) => {
         dispatch({ type: FETCH_SINGLE_PROFILE_ERROR, payload: null });
+        throw error;
+      });
+  }
+}
+
+export function followUserAction(id) {
+  return async (dispatch) => {
+    try {
+
+      const { data } = await followUser(id);
+
+      dispatch({ type: FOLLOW_USER_SUCCESS, payload: { userId: id, followed: data.isAdded } });
+
+    } catch(error) {
+      dispatch({ type: FETCH_SINGLE_PROFILE_ERROR, payload: null });
+      throw error;
+    }
+  }
+}
+
+export function fetchUsersPostsAction(userId) {
+  return async (dispatch) => {
+    try {
+      const { data } = await fetchUsersPosts(userId);
+
+      dispatch({ type: FETCH_USERS_POSTS_SUCCESS, payload: data })
+
+    } catch(error) {
+      dispatch({ type: FETCH_USERS_POSTS_ERROR, payload: null });
+      throw error;
+    }
+  }
+}
+
+export function deletePostAction(postId) {
+  return async (dispatch) => {
+    return deletePost(postId)
+      .then((res) => {
+        dispatch({ type: DELETE_POST_SUCCESS, payload: res.data._id });
+      })
+      .catch((error) => {
+        throw error;
+      });
+  };
+}
+
+export function fetchMyFollowingAction() {
+  return (dispatch) => {
+    dispatch({ type: FETCH_MY_FOLLOWING_BEGIN, payload: null });
+
+    return fetchMyFollowing()
+      .then((res) => {
+        dispatch({ type: FETCH_MY_FOLLOWING_SUCCESS, payload: res.data });
+      })
+      .catch((error) => {
+        // dispatch({ type: FETCH_PROFILES_ERROR, payload: null });
         throw error;
       });
   }

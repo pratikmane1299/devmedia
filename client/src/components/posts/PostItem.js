@@ -8,6 +8,8 @@ import formatDate from '../../utils/formatDate';
 import { deletePostAction, likeUnLikeAction, addCommentAction } from '../../actions/posts';
 import { setAlert } from '../../actions/alert';
 
+import UserAvatar from '../ui/UserAvatar';
+
 function PostItem({
   auth,
   post,
@@ -58,7 +60,7 @@ function PostItem({
           }}
         >
           <FontAwesomeIcon
-            className={post.likes.includes(auth.user._id) ? 'post-liked' : ''}
+            className={post.likes.includes(auth.user.user._id) ? 'post-liked' : ''}
             icon={faHeart}
           />
           {post.likes.length > 0 && <span>{post.likes.length}</span>}
@@ -127,13 +129,16 @@ function PostItem({
   }
 
   return (
-    <div className="post bg-white p-1 my-1">
+    <div
+      className="post bg-white p-1 my-1 border-light"
+      style={{ borderRadius: "8px" }}
+    >
       <div>
         <Link to={`/profiles/${post.user._id}`}>
-          <img
-            className="round-img"
+          <UserAvatar
+            size="lg"
             src={post.user.avatar}
-            alt={post.user.name}
+            username={post.user.name}
           />
           <h4>{post.user.name}</h4>
         </Link>

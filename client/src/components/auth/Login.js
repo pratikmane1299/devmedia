@@ -46,17 +46,15 @@ function Login({
   const handleOnLogin = async (e) => {
     e.preventDefault();
     try {
-      loginBegin();
-      const res = await loginAction(loginForm);
-
-      loginSuccess(res.token);
-      await fetchCurrentUserAction();
-
+      await loginAction(loginForm);
     } catch (error) {
       loginFailure();
-      error.response.data.errors.forEach((err) => {
-        setAlert(err.msg, "danger");
-      });
+      console.log(error.response);
+      if (error.response.status === 400) {
+        error.response.data.errors.forEach((err) => {
+          setAlert(err.msg, "danger");
+        });
+      }
     }
   }
 

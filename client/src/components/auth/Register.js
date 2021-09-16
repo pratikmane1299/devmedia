@@ -51,15 +51,15 @@ function Register({
       setAlert("Passwords don't match", 'danger');
     } else {
       try {
-        registerBegin();
-        const res = await registerAction(formData);
-        registerSuccess(res.token);
-        await fetchCurrentUserAction();
+        await registerAction(formData);
       } catch(error) {
+        console.log(error.response);
         registerFailure();
-        error.response.data.errors.forEach((err) => {
-          setAlert(err.msg, 'danger' );
-        });
+        if (error.response.status === 400) {
+          error.response.data.errors.forEach((err) => {
+            setAlert(err.msg, "danger");
+          });
+        }
       }
     }
   };

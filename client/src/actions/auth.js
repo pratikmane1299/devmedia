@@ -39,21 +39,36 @@ export function loginFailure() {
 
 export function registerAction(body) {
   return async (dispatch) => {
+    dispatch({ type: REGISTER_BEGIN, payload: null });
     return register(body)
-      .then(res => res.data)
+      .then(res => {
+        dispatch({ type: REGISTER_SUCCESS, payload: res.data.token });
+      })
       .catch(error => {
-        throw(error);        
+        throw(error);
        });
   }
 }
 
 export function loginAction(body) {
   return async (dispatch) => {
+
+    dispatch({ type: LOGIN_BEGIN, payload: null });
+
     return login(body)
-      .then(res => res.data)
-      .catch(error => {
-        throw(error);
+      .then(res => {
+        dispatch({ type: LOGIN_SUCCESS, payload: res.data.token });
       })
+      .catch(error => {
+        //dispatch({ type: LOGIN_FAIL, payload: null });
+        throw(error);
+       });
+
+    // return login(body)
+    //   .then(res => res.data)
+    //   .catch(error => {
+    //     throw(error);
+    //   })
   }
 }
 
@@ -67,6 +82,7 @@ export function fetchCurrentUserAction() {
       })
       .catch(error => {
         dispatch({ type: FETCH_CURRENT_USER_FAILURE, payload: null });
+        throw(error);
       });
   }
 }

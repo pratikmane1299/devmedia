@@ -28,10 +28,14 @@ export function deleteAccount() {
   return api.delete(`/api/v1/profile/`);
 }
 
-export function fetchProfiles() {
-  return api.get('/api/v1/profile');
+export function fetchDevelopers() {
+  return api.get('/api/v1/profile/developers');
 }
 
 export function fetchSingleProfile(id) {
   return api.get(`/api/v1/profile/${id}`);
+}
+
+export function followUser(userId) {
+  return api.put(`/api/v1/profile/${userId}/followUnFollowUser`);
 }

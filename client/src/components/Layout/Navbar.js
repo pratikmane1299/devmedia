@@ -2,30 +2,78 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCode, faSignOutAlt, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faCode } from '@fortawesome/free-solid-svg-icons';
 
 import { logoutAction } from '../../actions/auth';
 
-function Navbar({ auth: { loading, isAuthenticated }, logoutAction }) {
+import PopOverController from '../ui/PopOverController';
+import UserAvatar from '../ui/UserAvatar';
+import ProfileDropdown from '../ui/ProfileDropdown';
+
+function Navbar({ auth: { loading, isAuthenticated, user }, logoutAction }) {
   const authLinks = (
     <ul>
       <li>
-        <Link to="/profiles">Developers</Link>
+        <Link to="/developers">Developers</Link>
       </li>
       <li>
         <Link to="/posts">Posts</Link>
       </li>
       <li>
-        <Link to="dashboard">
-          <FontAwesomeIcon icon={faUser} />{' '}
-          <span className="hide-sm">Dashboard</span>
-        </Link>
-      </li>
-      <li>
-        <Link onClick={() => logoutAction()}>
-          <FontAwesomeIcon icon={faSignOutAlt} />{' '}
+        {/* <Link onClick={() => logoutAction()}>
+          <FontAwesomeIcon icon={faSignOutAlt} />{" "}
           <span className="hide-sm">Logout</span>
-        </Link>
+        </Link> */}
+        <PopOverController
+          zIndex={20}
+          className="popover-position"
+          innerClassName="popver-content"
+          overlay={
+            (close) => (
+              <ProfileDropdown
+                user={user}
+                onCloseDropdown={close}
+                onActionButtonClicked={() => logoutAction()}
+              />
+            )
+            // <div style={{ width: "200px" }}>
+            //   <div className="overlay-container">
+            //     <div className="overlay-content">
+            //       <div>
+            //         <button className="overlay-item-btn">
+            //           <FontAwesomeIcon
+            //             icon={faUserAlt}
+            //             style={{ color: "#000" }}
+            //           />
+            //           <span className="overlay-item-label">Your Profile</span>
+            //         </button>
+            //       </div>
+            //     </div>
+            //     <button
+            //       className="overlay-action-btn"
+            //       style={{
+            //         paddingTop: 8,
+            //         paddingBottom: 12,
+            //       }}
+            //     >
+            //       Logout
+            //     </button>
+            //   </div>
+            // </div>
+          }
+        >
+          {loading ? (
+            <span>...</span>
+          ) : (
+            user && (
+              <UserAvatar
+                size="sm"
+                username={user.user.username}
+                src={user.user.avatar}
+              />
+            )
+          )}
+        </PopOverController>
       </li>
     </ul>
   );
@@ -40,6 +88,10 @@ function Navbar({ auth: { loading, isAuthenticated }, logoutAction }) {
       </li>
     </ul>
   );
+
+  if (loading) {
+
+  }
 
   return (
     <nav className="navbar bg-dark">

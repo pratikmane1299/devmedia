@@ -3,7 +3,7 @@ import {
   FETCH_ALL_POSTS_SUCCESS,
   FETCH_ALL_POSTS_FAILURE,
   ADD_POST_SUCCESS,
-  DELETE_POST_SUCCESS,
+  // DELETE_POST_SUCCESS,
   UPDATE_LIKES,
   ADD_COMMENT,
 } from '../actions/posts';
@@ -27,11 +27,11 @@ export default function postsReducer(state = initialState, action) {
     case ADD_POST_SUCCESS:
       return { ...state, posts: [payload, ...state.posts] };
 
-    case DELETE_POST_SUCCESS:
-      return {
-        ...state,
-        posts: state.posts.filter((post) => post._id !== payload),
-      };
+    // case DELETE_POST_SUCCESS:
+    //   return {
+    //     ...state,
+    //     posts: state.posts.filter((post) => post._id !== payload),
+    //   };
 
     case UPDATE_LIKES:
       const updatedPosts = state.posts.map((post) => {

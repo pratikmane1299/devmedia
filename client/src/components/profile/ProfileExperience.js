@@ -1,34 +1,22 @@
 import React from 'react';
 
-import formatDate from '../../utils/formatDate';
+import ExperienceList from '../ui/ExperienceList';
 
 function ProfileExperience({
-  experience: {
-    company,
-    title,
-    location,
-    current,
-    to,
-    from,
-    description,
-  },
+  experiences,
+  className,
+  isCurrentUser,
+  onExperienceDelete,
+  onActionClicked
 }) {
   return (
-    <div>
-      <h3 className="text-dark">{company}</h3>
-      <p>
-        {formatDate(from)} - {to ? formatDate(to) : "Now"}
-      </p>
-      <p>
-        <strong>Position: </strong>
-        {title}
-      </p>
-      {description && (
-        <p>
-          <strong>Description: </strong>
-          {description}
-        </p>
-      )}
+    <div className={`${className}`}>
+      <ExperienceList
+        experiences={experiences}
+        isCurrentUser={isCurrentUser}
+        onExperienceDelete={onExperienceDelete}
+        onActionClicked={onActionClicked}
+      />
     </div>
   );
 }

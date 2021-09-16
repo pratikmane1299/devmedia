@@ -18,13 +18,22 @@ import {
   FETCH_SINGLE_PROFILE_BEGIN,
   FETCH_SINGLE_PROFILE_SUCCESS,
   FETCH_SINGLE_PROFILE_ERROR,
+  FOLLOW_USER_SUCCESS,
+  FETCH_USERS_POSTS_SUCCESS,
+  FETCH_MY_FOLLOWING_SUCCESS,
 } from '../actions/profile';
+
+import {
+  DELETE_POST_SUCCESS,
+} from '../actions/posts';
 
 const initialState = {
   me: null,
   profiles: [],
   profile: null,
   repos: [],
+  posts: [],
+  myFollowing: [],
   loading: false,
 };
 
@@ -57,13 +66,35 @@ export default function profileReducer(state = initialState, action) {
       return { ...state, loading: false };
 
     case UPDATE_PROFILE:
-      return { ...state, loading: false, me: payload };
+      return { ...state, loading: false, profile: payload };
     
     case FETCH_PROFILES_SUCCESS:
       return { ...state, loading: false, profiles: payload };
 
     case FETCH_SINGLE_PROFILE_SUCCESS:
       return { ...state, loading: false, profile: payload };
+
+    case FOLLOW_USER_SUCCESS:
+      const updatedPofiles = state.profiles.map(profile => {
+        if (profile.user._id === payload.userId) {
+          return { ...profile, isFollowedByViewer: payload.followed };
+        }
+        else return profile;
+      });
+
+      return { ...state, profiles: updatedPofiles };
+
+    case FETCH_USERS_POSTS_SUCCESS:
+      return { ...state, posts: payload };
+    
+    case DELETE_POST_SUCCESS:
+      return {
+        ...state,
+        posts: state.posts.filter((post) => post._id !== payload),
+      };
+
+    case FETCH_MY_FOLLOWING_SUCCESS:
+      return { ...state, myFollowing: payload };
     
     case FETCH_PROFILES_ERROR:
       return { ...state, loading: false, profiles: [] };

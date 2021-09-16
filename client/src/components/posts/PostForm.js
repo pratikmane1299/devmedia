@@ -37,9 +37,9 @@ function PostForm({ addNewPostAction, setAlert }) {
 
   return (
     <div className="post-form">
-      <div className="bg-primary p">
+      {/* <div className="bg-primary p">
         <h3>Say Something...</h3>
-      </div>
+      </div> */}
       <form
         className="form my-1"
         onSubmit={handleOnSubmit}

@@ -1,38 +1,22 @@
 import React from 'react';
 
-import formatDate from '../../utils/formatDate';
+import EducationList from '../ui/EducationList';
 
 function ProfileEducation({
-  education: {
-    school,
-    degree,
-    fieldofstufy,
-    current,
-    to,
-    from,
-    description,
-  },
+  educations,
+  className,
+  isCurrentUser,
+  onEducationDelete,
+  onActionClicked
 }) {
   return (
-    <div>
-      <h3 className="text-dark">{school}</h3>
-      <p>
-        {formatDate(from)} - {to ? formatDate(to) : "Now"}
-      </p>
-      <p>
-        <strong>Degree: </strong>
-        {degree}
-      </p>
-      <p>
-        <strong>Field of Study: </strong>
-        {fieldofstufy}
-      </p>
-      {description && (
-        <p>
-          <strong>Description: </strong>
-          {description}
-        </p>
-      )}
+    <div className={`${className}`}>
+      <EducationList
+        educations={educations}
+        isCurrentUser={isCurrentUser}
+        onEducationDelete={onEducationDelete}
+        onActionClicked={onActionClicked}
+      />
     </div>
   );
 }

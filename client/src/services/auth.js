@@ -11,3 +11,7 @@ export function login(body) {
 export function fetchCurrentUser() {
   return api.get('/api/v1/auth');
 }
+
+export function fetchMyFollowing() {
+  return api.get(`/api/v1/auth/my-following`);
+}
