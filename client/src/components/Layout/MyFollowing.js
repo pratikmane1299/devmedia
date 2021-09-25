@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { faArrowRight, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -9,9 +10,10 @@ import { fetchMyFollowingAction } from '../../actions/profile';
 import UserHorizontalCard from '../suggested-users/UserHorizontalCard';
 import UserAvatar from '../ui/UserAvatar';
 
-function MyFollowing({ following, fetchMyFollowingAction }) {
+function MyFollowing({ following, currentUser, fetchMyFollowingAction }) {
 
   const screenWidth = useScreenWidth();
+  const history = useHistory();
 
   useEffect(() => {
     fetchMyFollowingAction()
@@ -22,18 +24,20 @@ function MyFollowing({ following, fetchMyFollowingAction }) {
     <div
       style={{
         width: "100%",
-        marginTop: "1rem",
+        // marginTop: "1rem",
         display: "flex",
         flexDirection: "column",
         overflowY: "auto",
-        overflowX: 'hidden',
+        overflowX: "hidden",
       }}
     >
-      {screenWidth === '3-cols' && <h4>My Following</h4>}
+      {screenWidth === "3-cols" && (
+        <h4>You have {following.length} following</h4>
+      )}
       <div style={{ overflowY: "auto", paddingBottom: "1rem" }}>
         {following.map((following) => (
           <div key={following._id} style={{ margin: "0.5rem 0" }}>
-            {screenWidth === '3-cols' ? (
+            {screenWidth === "3-cols" ? (
               <UserHorizontalCard user={following.user} />
             ) : (
               <UserAvatar
@@ -44,17 +48,26 @@ function MyFollowing({ following, fetchMyFollowingAction }) {
             )}
           </div>
         ))}
-        <button className={`${screenWidth === '3-cols' ? 'show-more-btn' : 'round-btn'}`}>
-          {screenWidth === '3-cols' ? (
-            'Show More'
-          // <FontAwesomeIcon
-          //   icon={faArrowRight}
-          //   style={{ marginLeft: "0.5rem" }}
-          // />
-          ) : (
-            <FontAwesomeIcon icon={faPlus} />
-          )}
-        </button>
+        {following.length > 0 && (
+          <button
+            className={`${
+              screenWidth === "3-cols" ? "show-more-btn" : "round-btn"
+            }`}
+            onClick={() =>
+              history.push(`/profiles/${currentUser._id}/following`)
+            }
+          >
+            {screenWidth === "3-cols" ? (
+              "Show More"
+            ) : (
+              // <FontAwesomeIcon
+              //   icon={faArrowRight}
+              //   style={{ marginLeft: "0.5rem" }}
+              // />
+              <FontAwesomeIcon icon={faPlus} />
+            )}
+          </button>
+        )}
       </div>
     </div>
   );
@@ -63,6 +76,7 @@ function MyFollowing({ following, fetchMyFollowingAction }) {
 function mapStateToProps(store) {
   return {
     following: store.profile.myFollowing,
+    currentUser: store.auth.user.user,
   };
 }
 

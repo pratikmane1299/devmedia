@@ -42,9 +42,8 @@ function ProfilePosts({
       {posts.length > 0 ? (
         <>
           {posts.map((post) => (
-            <div className="post-container">
+            <div className="post-container" key={post._id}>
               <PostItem
-                key={post._id}
                 post={post}
                 showDeleteBtn={true}
                 isCurrentUser={isCurrentUser}

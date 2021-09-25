@@ -11,12 +11,14 @@ function ProfileEducation({
 }) {
   return (
     <div className={`${className}`}>
-      <EducationList
-        educations={educations}
-        isCurrentUser={isCurrentUser}
-        onEducationDelete={onEducationDelete}
-        onActionClicked={onActionClicked}
-      />
+      {educations.length > 0 ? (
+        <EducationList
+          educations={educations}
+          isCurrentUser={isCurrentUser}
+          onEducationDelete={onEducationDelete}
+          onActionClicked={onActionClicked}
+        />
+      ) : <p>No education details found...</p>}
     </div>
   );
 }

@@ -12,7 +12,7 @@ import MainLayout from '../Layout/MainLayout';
 import MyFollowing from '../Layout/MyFollowing';
 import { MiddlePanel } from '../Layout/GridPanels';
 
-const Developers = ({ loading, profiles, currentUser, isLoadingUser, fetchDevelopersAction, followUserAction, }) => {
+const Developers = ({ loading, profiles, auth, fetchDevelopersAction, followUserAction, }) => {
 
   useEffect(() => {
     fetchDevelopersAction()
@@ -54,39 +54,36 @@ const Developers = ({ loading, profiles, currentUser, isLoadingUser, fetchDevelo
     <MainLayout
       leftPanel={<MyFollowing />}
       rightPanel={
-        <div style={{ padding: "1rem" }}>
-          <UserProfileSummary currentUser={currentUser} />
+        <div>
+          <UserProfileSummary currentUser={auth.user} />
           <SuggestedUsers />
         </div>
       }
     >
-      <MiddlePanel
-        stickyChildren={
+      <MiddlePanel auth={auth}>
+        {loading ? (
+          <Spinner />
+        ) : (
           <>
             <h1 className="large text-primary">Developers</h1>
             <p className="lead">
               <FontAwesomeIcon icon={faConnectdevelop} /> Browse and connect
               with developers.
             </p>
+            <div className="profiles">
+              {profiles.length > 0 ? (
+                profiles.map((profile) => (
+                  <DeveloperCard
+                    key={profile._id}
+                    profile={profile}
+                    onFollowUser={handleOnFollowUser}
+                  />
+                ))
+              ) : (
+                <h4>No Profiles Found...</h4>
+              )}
+            </div>
           </>
-        }
-      >
-        {loading ? (
-          <Spinner />
-        ) : (
-          <div className="profiles">
-            {profiles.length > 0 ? (
-              profiles.map((profile) => (
-                <DeveloperCard
-                  key={profile._id}
-                  profile={profile}
-                  onFollowUser={handleOnFollowUser}
-                />
-              ))
-            ) : (
-              <h4>No Profiles Found...</h4>
-            )}
-          </div>
         )}
       </MiddlePanel>
     </MainLayout>
@@ -97,8 +94,9 @@ function mapStateToProps(store) {
   return {
     loading: store.profile.loading,
     profiles: store.profile.profiles,
-    currentUser: store.auth.user,
-    isLoadingUser: store.auth.loading,
+    auth: store.auth,
+    // currentUser: store.auth.user,
+    // isLoadingUser: store.auth.loading,
   };
 }
 

@@ -7,10 +7,11 @@ import { logoutAction } from '../../actions/auth';
 import { GridPanel, FixedGridPanel } from '../ui/GridPanel';
 import LeftHeader from '../ui/header/LeftHeader';
 import RightHeader from '../ui/header/RightHeader';
+import MiddleHeader from '../ui/header/MiddleHeader';
 
 export function HeaderWrapper({ children }) {
   return (
-    <div className="header-wrapper" style={{ height: "3rem" }}>
+    <div className="header-wrapper" style={{ height: "4rem" }}>
       {children}
     </div>
   );
@@ -57,7 +58,7 @@ export const ReduxRightPanel = connect(mapStateToProps, { logoutAction })(
   RightPanel
 );
 
-export function MiddlePanel({ children, stickyChildren }) {
+export function MiddlePanel({ children, stickyChildren, auth }) {
   const screenWidth = useScreenWidth();
   return (
     <GridPanel>
@@ -70,7 +71,7 @@ export function MiddlePanel({ children, stickyChildren }) {
       >
         {screenWidth !== "fullscreen" ? (
           <HeaderWrapper>
-            <div>Middle Header</div>
+            <MiddleHeader auth={auth}></MiddleHeader>
           </HeaderWrapper>
         ) : (
           ""

@@ -19,7 +19,17 @@ function MainGrid({
 
   return (
     <div className="main-grid-container">
-      <div style={{position: 'relative', display: screenWidth === 'fullscreen' ? 'flex' : 'grid', gridTemplateColumns, columnGap: 50}}>
+      <div
+        style={{
+          position: "relative",
+          display: screenWidth === "fullscreen" ? "flex" : "grid",
+          gridTemplateColumns,
+          columnGap: screenWidth !== 'fullscreen' ? 50 : 0,
+          marginTop: screenWidth === 'fullscreen' ? '3rem':0,
+          marginBottom: screenWidth === 'fullscreen' ? '3rem' : 0,
+          padding: '0 1rem',
+        }}
+      >
         {children}
       </div>
     </div>

@@ -11,12 +11,13 @@ function LeftHeader({ children }) {
   return (
     <>
       {screenWidth === "3-cols" ? (
-        <Link to="/posts">
-          <FontAwesomeIcon icon={faCode} /> DevConnector
+        <Link to="/home" style={{display: 'flex',alignItems: 'center'}}>
+          <FontAwesomeIcon icon={faCode} style={{height: '30px', width: '30px'}} />
+          <span style={{marginLeft: '0.5rem',fontSize: '1.2rem', fontWeight: 'bold'}}>DevMedia</span>
         </Link>
       ) : (
-        <Link to="/posts">
-          <FontAwesomeIcon icon={faCode} />
+        <Link to="/home">
+          <FontAwesomeIcon icon={faCode} style={{height: '40px', width: '40px'}} />
         </Link>
       )}
     </>

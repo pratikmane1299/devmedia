@@ -18,9 +18,9 @@ function UserHorizontalCard({ user }) {
             display: "flex",
             flexDirection: "column",
           }}
+          className="text-dark"
         >
           <span
-            className="text-primary"
             style={{
               fontWeight: 700,
               overflow: "hidden",

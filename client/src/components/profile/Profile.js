@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
-import { deleteEducationAction, deleteExperienceAction } from '../../actions/profile';
+import { deleteEducationAction, deleteExperienceAction, followUserInProfileAction } from '../../actions/profile';
 import { setAlert } from '../../actions/alert';
 
 import { fetchProfileAction } from '../../actions/profile';
@@ -15,26 +15,33 @@ import SuggestedUsers from '../suggested-users/SuggestedUsers';
 import MyFollowing from '../Layout/MyFollowing';
 import AddEducationModal from './AddEducationModal';
 import AddExperienceModal from './AddExperienceModal';
+import { EditProfileModal } from './EditProfileModal';
 
-export const Profile = ({ match, profile: { loading, profile }, currentUser, fetchProfileAction, deleteEducationAction, deleteExperienceAction }) => {
-
+export const Profile = ({
+  match,
+  profile: { loading, profile },
+  auth,
+  fetchProfileAction,
+  deleteEducationAction,
+  deleteExperienceAction,
+  followUserInProfileAction,
+}) => {
   const [showModal, setShowModal] = useState(false);
-  const [activeModal, setActiveModal] = useState('');
+  const [activeModal, setActiveModal] = useState("");
 
   useEffect(() => {
-    fetchProfileAction(match.params.id)
-      .then(() => 'Profile fetched...');
+    fetchProfileAction(match.params.id).then(() => "Profile fetched...");
   }, [fetchProfileAction, match.params.id]);
 
   async function handleEducationDelete(educationId) {
     try {
       await deleteEducationAction(educationId);
-      setAlert('Education deleted', 'success');
+      setAlert("Education deleted", "success");
     } catch (error) {
       switch (error.response.status) {
         case 500:
         default:
-          setAlert(error.response.statusText, 'danger');
+          setAlert(error.response.statusText, "danger");
           break;
       }
     }
@@ -44,16 +51,23 @@ export const Profile = ({ match, profile: { loading, profile }, currentUser, fet
     console.log(expId);
     try {
       await deleteExperienceAction(expId);
-      setAlert('Education deleted', 'success');
+      setAlert("Education deleted", "success");
     } catch (error) {
       switch (error.response.status) {
         case 500:
         default:
-          setAlert(error.response.statusText, 'danger');
+          setAlert(error.response.statusText, "danger");
           break;
       }
     }
   }
+
+  function handleOnFollowUnFollow() {
+    followUserInProfileAction(profile.user._id);
+    // console.log(profile.user._id);
+  }
+
+  console.log(auth.user);
 
   return (
     // <div>
@@ -121,13 +135,13 @@ export const Profile = ({ match, profile: { loading, profile }, currentUser, fet
     <MainLayout
       leftPanel={<MyFollowing />}
       rightPanel={
-        <div style={{ padding: "1rem" }}>
-          <UserProfileSummary currentUser={currentUser} />
+        <div>
+          <UserProfileSummary currentUser={auth.user} />
           <SuggestedUsers />
         </div>
       }
     >
-      <MiddlePanel>
+      <MiddlePanel auth={auth}>
         {loading ? (
           <Spinner />
         ) : (
@@ -138,12 +152,17 @@ export const Profile = ({ match, profile: { loading, profile }, currentUser, fet
                   displayName={profile.user.name}
                   username={profile.user.username}
                   avatarUrl={profile.user.avatar}
-                  isCurrentUser={currentUser.user._id === profile.user._id}
+                  isCurrentUser={auth.user.user._id === profile.user._id}
                   isFollowedByViewer={profile.isFollowedByViewer}
+                  onEditProfileClicked={() => {
+                    setShowModal(true);
+                    setActiveModal("edit-profile");
+                  }}
+                  onFollowClicked={handleOnFollowUnFollow}
                 />
                 <ProfileTabs
                   profile={profile}
-                  isCurrentUser={currentUser.user._id === profile.user._id}
+                  isCurrentUser={auth.user.user._id === profile.user._id}
                   onEducationDelete={handleEducationDelete}
                   onExperienceDelete={handleExperienceDelete}
                   onActionClicked={(activeModal) => {
@@ -152,20 +171,29 @@ export const Profile = ({ match, profile: { loading, profile }, currentUser, fet
                   }}
                 />
                 {showModal ? (
-                  activeModal === 'add-education' ? (
+                  activeModal === "add-education" ? (
                     <AddEducationModal
                       isOpen={showModal}
                       onRequestClose={() => {
                         setShowModal(false);
-                        setActiveModal('');
+                        setActiveModal("");
                       }}
                     />
-                  ) : activeModal === 'add-experience' ? (
+                  ) : activeModal === "add-experience" ? (
                     <AddExperienceModal
                       isOpen={showModal}
                       onRequestClose={() => {
                         setShowModal(false);
-                        setActiveModal('');
+                        setActiveModal("");
+                      }}
+                    />
+                  ) : activeModal === "edit-profile" ? (
+                    <EditProfileModal
+                      isOpen={showModal}
+                      profile={profile}
+                      onRequestClose={() => {
+                        setShowModal(false);
+                        setActiveModal("");
                       }}
                     />
                   ) : null
@@ -177,12 +205,12 @@ export const Profile = ({ match, profile: { loading, profile }, currentUser, fet
       </MiddlePanel>
     </MainLayout>
   );
-}
+};
 
 function mapStateToProps(store) {
   return {
     profile: store.profile,
-    currentUser: store.auth.user,
+    auth: store.auth,
   };
 }
 
@@ -191,5 +219,6 @@ export default connect(
     fetchProfileAction,
     deleteEducationAction,
     deleteExperienceAction,
+    followUserInProfileAction,
   }
 )(Profile);

@@ -10,7 +10,9 @@ function ProfileHeader({
   displayName,
   username,
   isCurrentUser,
-  isFollowedByViewer
+  isFollowedByViewer,
+  onEditProfileClicked,
+  onFollowClicked,
 }) {
   return (
     <ProfileHeaderContainer
@@ -19,18 +21,22 @@ function ProfileHeader({
       <div className="profile-header">
         <UserAvatar src={avatarUrl} username={username} className="user-avatar" />
         {isCurrentUser ?  (
-          <Link to="/edit-profile" className="btn btn-primary">Edit Profile</Link>
+          <button className="btn btn-primary" onClick={onEditProfileClicked}>Edit Profile</button>
+          // <Link to="/edit-profile" className="btn btn-primary">Edit Profile</Link>
         ): (
-          <button className={`btn ${
+          <button type="button" className={`btn ${
             isFollowedByViewer ? "btn-primary" : "btn-primary-outline"
-          }`}>
+          }`} onClick={(e) => {
+            e.preventDefault();
+            onFollowClicked();
+          }}>
             {isFollowedByViewer ? 'Following' : 'Follow'}
           </button>
         )}
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', marginTop: '0.5rem'}}>
         <span
-          className="text-primary"
+          className="text-dark"
           style={{
             fontWeight: 700,
             overflow: "hidden",

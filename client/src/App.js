@@ -7,11 +7,16 @@ import Landing from './components/Layout/Landing';
 import Routes from './components/routing/Routes';
 import PrivateRoute from './components/routing/PrivateRoute';
 import { HomePage } from './Pages/Home';
+import { Search as SearchPage } from './Pages/Search';
+import { FollowersFollowingPage } from './Pages/MyFollowing';
+import Login from './components/auth/Login';
+import Register from './components/auth/Register';
 import Profile from './components/profile/Profile';
 import Developers from './components/developers/Developers';
 import { fetchCurrentUserAction } from './actions/auth';
 
 import './App.css';
+import Alert from './components/Layout/Alert';
 
 function App({ isAuthenticated, fetchCurrentUserAction }) {
   useEffect(() => {
@@ -22,12 +27,18 @@ function App({ isAuthenticated, fetchCurrentUserAction }) {
     <Router>
       <>
         {/* <Navbar /> */}
+        <Alert />
         <Switch>
           <Route exact path="/" component={Landing} />
-          <PrivateRoute exact path="/posts" component={HomePage} />
-          <PrivateRoute path="/profiles/:id" component={Profile} />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/register" component={Register} />
+          <PrivateRoute exact path="/home" component={HomePage} />
+          <PrivateRoute exact path="/profiles/:id" component={Profile} />
+          <PrivateRoute path="/profiles/:id/following" component={FollowersFollowingPage} />
+          <PrivateRoute path="/profiles/:id/followers" component={FollowersFollowingPage} />
           <PrivateRoute exact path="/developers" component={Developers} />
-          <Route component={Routes} />
+          <PrivateRoute exact path="/search" component={SearchPage} />
+          {/* <Route component={Routes} /> */}
         </Switch>
       </>
     </Router>

@@ -50,6 +50,7 @@ function AddExperienceModal({ isOpen, onRequestClose, setAlert, addExperienceAct
       error.response.data.errors.forEach((err) => {
         setAlert(err.msg, 'danger');
       });
+      console.log(error);
     }
   }
 

@@ -49,6 +49,7 @@ function SuggestedUsers({ users, loading, currentUser, fetchDevelopersAction }) 
           flexDirection: "column",
           padding: "8px 16px",
         }}
+        className="bg-light"
       >
         <UsersList users={getFiveUnfollowedUsers()} />
       </div>

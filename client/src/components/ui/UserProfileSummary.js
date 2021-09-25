@@ -1,19 +1,25 @@
+import { Link } from 'react-router-dom';
 import UserHorizontalCard from '../suggested-users/UserHorizontalCard';
 import Website from './Website';
 
 function UserProfileSummary({ currentUser }) {
   return (
-    <div className="profile-summary-container bg-light border-light" style={{borderRadius: '8px'}}>
+    <div
+      className="profile-summary-container bg-light border-light"
+      style={{ borderRadius: "8px" }}
+    >
       <UserHorizontalCard user={currentUser.user} />
       <div className="user-details">
         <div style={{ display: "flex", paddingRight: "10px" }}>
-          <span
-            className="text-primary"
-            style={{ fontWeight: 700, color: "#333" }}
-          >
-            {currentUser.meta.followers}
-          </span>
-          <span style={{ marginLeft: "6px" }}>followers</span>
+          <Link to={`/profiles/${currentUser.user._id}/followers`} className="text-dark">
+            <span
+              className="text-primary"
+              style={{ fontWeight: 700, color: "#333" }}
+            >
+              {currentUser.meta.followers}
+            </span>
+            <span style={{ marginLeft: "6px" }}>followers</span>
+          </Link>
         </div>
         <div
           style={{
@@ -22,13 +28,15 @@ function UserProfileSummary({ currentUser }) {
             paddingRight: "10px",
           }}
         >
-          <span
-            className="text-primary"
-            style={{ fontWeight: 700, color: "#333" }}
-          >
-            {currentUser.meta.following}
-          </span>
-          <span style={{ marginLeft: "6px" }}>following</span>
+          <Link to={`/profiles/${currentUser.user._id}/following`} className="text-dark">
+            <span
+              className="text-primary"
+              style={{ fontWeight: 700, color: "#333" }}
+            >
+              {currentUser.meta.following}
+            </span>
+            <span style={{ marginLeft: "6px" }}>following</span>
+          </Link>
         </div>
       </div>
       <div

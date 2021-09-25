@@ -11,12 +11,14 @@ function ProfileExperience({
 }) {
   return (
     <div className={`${className}`}>
-      <ExperienceList
-        experiences={experiences}
-        isCurrentUser={isCurrentUser}
-        onExperienceDelete={onExperienceDelete}
-        onActionClicked={onActionClicked}
-      />
+      {experiences.length > 0 ? (
+        <ExperienceList
+          experiences={experiences}
+          isCurrentUser={isCurrentUser}
+          onExperienceDelete={onExperienceDelete}
+          onActionClicked={onActionClicked}
+        />
+      ) : <p>No experience details found...</p>}
     </div>
   );
 }

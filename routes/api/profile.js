@@ -133,17 +133,26 @@ router.put('/experience',
     }
 
     try {
-      const profile = await Profile.findOneAndUpdate({ user: req.user.id }, {
-        $push: {
-          experience: {
-            $each: [req.body],
-            position: 0
-          }
-        }
-      }).populate('user', 
-      ['name', 'avatar',]).lean();
+
+      const profile = await Profile.findOne({ user: req.user.id });
+
+      profile.experience.unshift(req.body);
+
+      await profile.save();
+
+      return res.json(profile.experience);
+
+      // const profile = await Profile.findOneAndUpdate({ user: req.user.id }, {
+      //   $push: {
+      //     experience: {
+      //       $each: [req.body],
+      //       position: 0
+      //     }
+      //   }
+      // }).populate('user', 
+      // ['name', 'avatar',]).lean();
       
-      res.json(serializeProfile(profile, req.user, true));
+      // res.json(serializeProfile(profile, req.user, true));
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server Error');
@@ -197,8 +206,7 @@ router.put('/education',
 
       await profile.save();
 
-
-      return profile.education;
+      return res.json(profile.education);
 
 
       // const profile = await Profile.findOneAndUpdate({ user: req.user.id }, {
@@ -299,6 +307,50 @@ router.put('/:userId/followUnFollowUser', async (req, res) => {
   } catch (error) {
     console.error(error.message);
     res.status(500).send('Server Error');
+  }
+});
+
+router.get('/:userId/following', async (req, res) => {
+  try {
+    const userProfile = await Profile.findOne({ user: req.params.userId}, {following: {$slice: [0,8]}});
+
+    const userFollowing = await Profile.find(
+      { user: { $in: userProfile.following } },
+      'id followers'
+    )
+      .populate('user', ['name', 'avatar'])
+      .lean();
+
+      for(let profile of userFollowing) {
+        profile = serializeProfile(profile, req.user);
+      }
+
+    return res.json(userFollowing);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Internal server error');
+  }
+});
+
+router.get('/:userId/followers', async (req, res) => {
+  try {
+    const userProfile = await Profile.findOne({ user: req.params.userId}, {following: {$slice: [0,8]}});
+
+    const userFollowers = await Profile.find(
+      { user: { $in: userProfile.followers } },
+      'id followers'
+    )
+      .populate('user', ['name', 'avatar'])
+      .lean();
+
+      for(let profile of userFollowers) {
+        profile = serializeProfile(profile, req.user);
+      }
+
+    return res.json(userFollowers);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Internal server error');
   }
 });
 

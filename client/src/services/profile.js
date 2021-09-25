@@ -39,3 +39,11 @@ export function fetchSingleProfile(id) {
 export function followUser(userId) {
   return api.put(`/api/v1/profile/${userId}/followUnFollowUser`);
 }
+
+export function fetchUsersFollowing(userId) {
+  return api.get(`/api/v1/profile/${userId}/following`);
+}
+
+export function fetchUserFollowers(userId) {
+  return api.get(`/api/v1/profile/${userId}/followers`);
+}

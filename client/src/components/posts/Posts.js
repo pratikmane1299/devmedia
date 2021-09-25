@@ -17,11 +17,12 @@ import { MiddlePanel } from '../Layout/GridPanels';
 import PostItem from '../ui/PostItem';
 import PostComment from '../ui/PostComment';
 import MyFollowing from '../Layout/MyFollowing';
+import SearchHeader from '../ui/mobile/header/SearchHeader';
 
 export const Posts = ({
   posts,
-  currentUser,
-  loading,
+  // currentUser,
+  auth,
   fetchAllPostsAction,
   likeUnLikeAction,
   addCommentAction,
@@ -63,50 +64,67 @@ export const Posts = ({
 
   return (
     <MainLayout
+      currentUser={auth.user}
       leftPanel={<MyFollowing />}
       rightPanel={
-        <div style={{ padding: "1rem" }}>
-          <UserProfileSummary currentUser={currentUser} />
+        <div>
+          <UserProfileSummary currentUser={auth.user} />
           <SuggestedUsers />
         </div>
       }
     >
       <MiddlePanel
-        stickyChildren={
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <h1 className="large text-primary">Posts</h1>
-            <p className="lead">
-              <FontAwesomeIcon icon={faUser} /> Welcome to the community.
-            </p>
-            <PostForm />
-          </div>
-        }
+      // stickyChildren={
+      //   <div style={{ display: "flex", flexDirection: "column", backgroundColor: '#fff' }}>
+      //     <h1 className="large text-primary">Posts</h1>
+      //     <p className="lead">
+      //       <FontAwesomeIcon icon={faUser} /> Welcome to the community.
+      //     </p>
+      //     <PostForm />
+      //   </div>
+      // }
+        auth={auth}
       >
         {posts.loading ? (
           <Spinner />
         ) : (
-          <div className="posts">
-            {posts.posts.length > 0 ? (
-              posts.posts.map((post) => (
-                <div key={post._id} className="post-container">
-                  {/* <PostItem post={post} /> */}
-                  <PostItem
-                    post={post}
-                    isCurrentUser={true}
-                    userId={currentUser.user._id}
-                    allowCommenting={true}
-                    onPostLiked={handleOnPostLiked}
-                    onComment={handleOnComment}
-                  />
-                  <div className="post-comments">
-                    {generateComments(post.comments)}
+          <>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                backgroundColor: "#fff",
+              }}
+            >
+              <h1 className="large text-primary">Posts</h1>
+              <p className="lead">
+                <FontAwesomeIcon icon={faUser} /> Welcome to the community.
+              </p>
+              <PostForm />
+            </div>
+            <div className="posts">
+              {posts.posts.length > 0 ? (
+                posts.posts.map((post) => (
+                  <div key={post._id} className="post-container">
+                    {/* <PostItem post={post} /> */}
+                    <PostItem
+                      post={post}
+                      isCurrentUser={true}
+                      userId={auth.user.user._id}
+                      allowCommenting={true}
+                      onPostLiked={handleOnPostLiked}
+                      onComment={handleOnComment}
+                    />
+                    <div className="post-comments">
+                      {generateComments(post.comments)}
+                    </div>
                   </div>
-                </div>
-              ))
-            ) : (
-              <p>No posts found</p>
-            )}
-          </div>
+                ))
+              ) : (
+                <p>Follow other developers to view their posts.</p>
+              )}
+            </div>
+          </>
         )}
       </MiddlePanel>
     </MainLayout>
@@ -116,8 +134,8 @@ export const Posts = ({
 function mapStateToProps(store) {
   return {
     posts: store.posts,
-    currentUser: store.auth.user,
-    loading: store.auth.loading,
+    // currentUser: store.auth.user,
+    auth: store.auth,
   }
 }
 
