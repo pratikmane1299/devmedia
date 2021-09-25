@@ -13,6 +13,7 @@ import {
 
 import { createProfileAction } from '../../actions/profile';
 import { setAlert } from '../../actions/alert';
+import Spinner from '../Layout/Spinner';
 
 const initialState = {
   company: '',
@@ -29,7 +30,7 @@ const initialState = {
   linkedin: '',
 }
 
-function EditProfile({ profile: { me }, history, createProfileAction, setAlert }) {
+function EditProfile({ profile: { me, profile, profileLoading }, history, createProfileAction, setAlert }) {
   const [showSocialMediaLinks, toggleSocialMediaLinks] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -52,32 +53,32 @@ function EditProfile({ profile: { me }, history, createProfileAction, setAlert }
 
   useEffect(() => {
     setProfileForm({
-      company: !me.company ? "" : me.company,
-      location: !me.location ? "" : me.location,
-      status: !me.status ? "" : me.status,
-      githubusername: !me.githubusername ? "" : me.githubusername,
-      bio: !me.bio ? "" : me.bio,
-      website: !me.website ? "" : me.website,
-      skills: !me.skills ? "" : me.skills.join(","),
-      youtube: !me.social.youtube ? "" : me.social.youtube,
-      facebook: !me.social.facebook ? "" : me.social.facebook,
-      twitter: !me.social.twitter ? "" : me.social.twitter,
-      instagram: !me.social.instagram ? "" : me.social.instagram,
-      linkedin: !me.social.linkedin ? "" : me.social.linkedin,
+      company: !profile.company ? "" : profile.company,
+      location: !profile.location ? "" : profile.location,
+      status: !profile.status ? "" : profile.status,
+      githubusername: !profile.githubusername ? "" : profile.githubusername,
+      bio: !profile.bio ? "" : profile.bio,
+      website: !profile.website ? "" : profile.website,
+      skills: !profile.skills ? "" : profile.skills.join(","),
+      youtube: !profile.social?.youtube ? "" : profile.social.youtube,
+      facebook: !profile.social?.facebook ? "" : profile.social.facebook,
+      twitter: !profile.social?.twitter ? "" : profile.social.twitter,
+      instagram: !profile.social?.instagram ? "" : profile.social.instagram,
+      linkedin: !profile.social?.linkedin ? "" : profile.social.linkedin,
     });
   }, [
-    me.bio,
-    me.company,
-    me.githubusername,
-    me.location,
-    me.skills,
-    me.social.facebook,
-    me.social.instagram,
-    me.social.linkedin,
-    me.social.twitter,
-    me.social.youtube,
-    me.status,
-    me.website,
+    profile?.bio,
+    profile?.company,
+    profile?.githubusername,
+    profile?.location,
+    profile?.skills,
+    profile.social?.facebook,
+    profile.social?.instagram,
+    profile.social?.linkedin,
+    profile.social?.twitter,
+    profile.social?.youtube,
+    profile?.status,
+    profile?.website,
   ]);
 
   function handleOnChange(e) {
@@ -110,7 +111,11 @@ function EditProfile({ profile: { me }, history, createProfileAction, setAlert }
 
   return (
     <div>
-      <h1 className="large text-primary">Edit Your Profile</h1>
+      {profileLoading ? (
+        <Spinner />
+      ) : (
+        <>
+          <h1 className="large text-primary">Edit Your Profile</h1>
       <p className="lead">
         <FontAwesomeIcon icon={faUser} />{' '} Let's get some information to make your
         profile stand out
@@ -281,6 +286,9 @@ function EditProfile({ profile: { me }, history, createProfileAction, setAlert }
           Go Back
         </Link>
       </form>
+        </>
+      )}
+      
     </div>
   );
 }

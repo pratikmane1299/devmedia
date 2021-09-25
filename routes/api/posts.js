@@ -4,11 +4,16 @@ const { check, validationResult } = require('express-validator');
 
 const auth = require('../../middlewares/veifyJwt');
 const Post = require('../../models/post');
+const Profile = require('../../models/profile');
 
 router.get('/', auth, async (req, res) => {
 
   try {
-    const posts = await Post.find()
+    const { followers, following } = await Profile.findOne({ user: req.user.id }, 'followers following');
+
+    const followersFollowings = followers.concat(following).map(i => i.toString());
+
+    const posts = await Post.find({ user: { $in: [...followersFollowings, req.user.id] } })
       .populate('user', ['name', 'avatar'])
       .populate('comments.user', ['name', 'avatar'])
       .sort({ date: -1 });

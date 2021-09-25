@@ -6,6 +6,7 @@ const Profile = require('../../models/profile');
 const User = require('../../models/user');
 const Post = require('../../models/post');
 const isObjectId = require('../../middlewares/isObjectId');
+const { serializeProfile } = require('../../utils/serialize');
 
 const router = express.Router();
 
@@ -77,10 +78,20 @@ router.post('/',
   }
 );
 
-router.get('/', async (req, res) => {
+router.get('/developers', async (req, res) => {
   try {
-    const profiles = await Profile.find().populate('user', ['name', 'avatar']);
-    return res.json(profiles);
+    const developers = await Profile.find(
+      { user: { $ne: req.user.id.toString() } },
+      'location user company followers following website'
+    )
+      .lean()
+      .populate('user', ['name', 'avatar']);
+
+    for(let dev of developers) {
+      dev = serializeProfile(dev, req.user);
+    }
+
+    return res.json(developers);
   } catch(error) {
     console.error(error);
     res.status(500).send('Internal server error');
@@ -93,16 +104,16 @@ router.get('/:userId',
     const { userId } = req.params;
 
     try {
-      const profile = await Profile.findOne({ user: userId }).populate('user', [
+      let profile = await Profile.findOne({ user: userId }).populate('user', [
         'name',
         'avatar',
-      ]);
+      ]).lean();
 
       if (!profile) {
         return res.status(404).json({ msg: 'Profile for the user not found' });
       }
 
-      res.json(profile);
+      res.json(serializeProfile(profile, req.user, true));
     } catch (error) {
       console.error(error);
       return res.status(500).send('Internal server error');
@@ -122,13 +133,26 @@ router.put('/experience',
     }
 
     try {
+
       const profile = await Profile.findOne({ user: req.user.id });
 
       profile.experience.unshift(req.body);
 
       await profile.save();
 
-      res.json(profile);
+      return res.json(profile.experience);
+
+      // const profile = await Profile.findOneAndUpdate({ user: req.user.id }, {
+      //   $push: {
+      //     experience: {
+      //       $each: [req.body],
+      //       position: 0
+      //     }
+      //   }
+      // }).populate('user', 
+      // ['name', 'avatar',]).lean();
+      
+      // res.json(serializeProfile(profile, req.user, true));
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server Error');
@@ -140,7 +164,7 @@ router.delete('/experience/:expId',
   isObjectId('expId'),
   async (req, res) => {
     try {
-      const profile = await Profile.findOne({ user: req.user.id });
+      let profile = await Profile.findOne({ user: req.user.id }, 'experience');
 
       profile.experience = profile.experience.filter(
         (exp) => exp.id.toString() !== req.params.expId
@@ -148,9 +172,14 @@ router.delete('/experience/:expId',
 
       await profile.save();
 
-      return res.json(profile);
+      profile = await Profile.findOne({ user: req.user.id }).populate('user', [
+        'name',
+        'avatar',
+      ]).lean();
+
+      return res.json(serializeProfile(profile, req.user, true));
     } catch (error) {
-      console.error(err.message);
+      console.error(error);
       res.status(500).send('Server Error');
     }
   }
@@ -170,13 +199,27 @@ router.put('/education',
     }
 
     try {
+
       const profile = await Profile.findOne({ user: req.user.id });
 
       profile.education.unshift(req.body);
 
       await profile.save();
 
-      return res.json(profile);
+      return res.json(profile.education);
+
+
+      // const profile = await Profile.findOneAndUpdate({ user: req.user.id }, {
+      //   $push: {
+      //     education: {
+      //       $each: [req.body],
+      //       position: 0
+      //     }
+      //   }
+      // }).populate('user', 
+      // ['name', 'avatar',]).lean();
+
+      // return res.json(serializeProfile(profile, req.user, true));
     } catch (error) {
       console.error(error.message);
       res.status(500).send('Server Error');
@@ -188,7 +231,9 @@ router.delete('/education/:eduId',
   isObjectId('eduId'),
   async (req, res) => {
     try {
-      const profile = await Profile.findOne({ user: req.user.id });
+      let profile = await Profile.findOne({ user: req.user.id }, 'education');
+
+      console.log(profile);
 
       profile.education = profile.education.filter(
         (edu) => edu.id.toString() !== req.params.eduId
@@ -196,9 +241,14 @@ router.delete('/education/:eduId',
 
       await profile.save();
 
-      return res.json(profile);
+      profile = await Profile.findOne({ user: req.user.id }).populate('user', [
+        'name',
+        'avatar',
+      ]).lean();
+
+      return res.json(serializeProfile(profile, req.user, true));
     } catch (error) {
-      console.error(err.message);
+      console.error(error);
       res.status(500).send('Server Error');
     }
   }
@@ -216,6 +266,91 @@ router.delete('/', async (req, res) => {
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
+  }
+});
+
+router.put('/:userId/followUnFollowUser', async (req, res) => {
+  try {
+
+    const { userId } = req.params;
+    
+    const userProfile = await Profile.findOne({ user: userId });
+
+    const viewerProfile = await Profile.findOne({user: req.user.id});
+
+    let isAdded = false;
+    
+    if (!userProfile || userId === req.user.id) {
+      return res.status(400).json({ message: 'Invalid request' });
+    }
+
+    if (!viewerProfile.following.includes(userId)) {
+      // viewer does not follow user
+
+      viewerProfile.following.unshift(userId);
+      userProfile.followers.unshift(viewerProfile.user._id);
+
+      isAdded = true;
+    } else {
+      // viewer is already following user
+
+      viewerProfile.following = viewerProfile.following.filter((id) => id.toString() !== userId);
+
+      userProfile.followers = userProfile.followers.filter((id) => id.toString() !== viewerProfile.user._id.toString());
+
+    }
+    await viewerProfile.save();
+    await userProfile.save();
+
+    res.status(200).json({ isAdded });
+
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+router.get('/:userId/following', async (req, res) => {
+  try {
+    const userProfile = await Profile.findOne({ user: req.params.userId}, {following: {$slice: [0,8]}});
+
+    const userFollowing = await Profile.find(
+      { user: { $in: userProfile.following } },
+      'id followers'
+    )
+      .populate('user', ['name', 'avatar'])
+      .lean();
+
+      for(let profile of userFollowing) {
+        profile = serializeProfile(profile, req.user);
+      }
+
+    return res.json(userFollowing);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Internal server error');
+  }
+});
+
+router.get('/:userId/followers', async (req, res) => {
+  try {
+    const userProfile = await Profile.findOne({ user: req.params.userId}, {following: {$slice: [0,8]}});
+
+    const userFollowers = await Profile.find(
+      { user: { $in: userProfile.followers } },
+      'id followers'
+    )
+      .populate('user', ['name', 'avatar'])
+      .lean();
+
+      for(let profile of userFollowers) {
+        profile = serializeProfile(profile, req.user);
+      }
+
+    return res.json(userFollowers);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Internal server error');
   }
 });
 

@@ -6,16 +6,46 @@ const normalizeUrl = require('normalize-url');
 
 const auth = require('../../middlewares/veifyJwt');
 const User = require('../../models/user');
+const Profile = require('../../models/profile');
+
+const { serializeUser, serializeProfile } = require('../../utils/serialize');
 
 const router = express.Router();
 
 router.get('/', auth, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select('-password');
-    res.json(user);
+    const user = await Profile.findOne(
+      { user: req.user.id },
+      'bio website followers following'
+    ).lean().populate('user', ['name', 'avatar']);
+
+    res.json(serializeUser(user));
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Inter server error');
+  }
+});
+
+router.get('/my-following', auth, async (req, res) => {
+  try {
+
+    const me = await Profile.findOne({ user: req.user.id}, {following: {$slice: [0,8]}});
+
+    const myFollowing = await Profile.find(
+      { user: { $in: me.following } },
+      'id followers'
+    )
+      .populate('user', ['name', 'avatar'])
+      .lean();
+
+      for(let profile of myFollowing) {
+        profile = serializeProfile(profile, req.user);
+      }
+
+    return res.json(myFollowing);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Internal server error');
   }
 });
 
@@ -43,12 +73,14 @@ router.post('/register',
         gravatar.url(email, {
           s: "200",
           r: "pg",
-          d: "mm",
+          d: "retro",
         }),
         { forceHttps: true }
       );
 
       const newUser = await User.create({ name, email, password, avatar });
+
+      await Profile.create({ user: newUser._id });
 
       const token = jwt.sign({ user: { id: newUser.id }}, process.env.JWT_SECRET, { expiresIn: 3600 });
 

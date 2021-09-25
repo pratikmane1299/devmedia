@@ -10,11 +10,11 @@ const profileSchema = new mongoose.Schema({
   location: String,
   status: {
     type: String,
-    required: true,
+    required: false,
   },
   skills: {
     type: [String],
-    required: true,
+    required: false,
   },
   bio: String,
   githubusername: String,
@@ -81,7 +81,19 @@ const profileSchema = new mongoose.Schema({
   date: {
     type: Date,
     default: Date.now
-  }
+  },
+  followers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
+  following: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
 });
 
 const Profile = mongoose.model('profile', profileSchema);

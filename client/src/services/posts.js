@@ -19,3 +19,7 @@ export function likeUnLikePost(postId) {
 export function addComment(postId, comment) {
   return api.post(`/api/v1/posts/${postId}/add-comment`, comment);
 }
+
+export function fetchUsersPosts(userId) {
+  return api.get(`/api/v1/users/${userId}/posts`);
+}
