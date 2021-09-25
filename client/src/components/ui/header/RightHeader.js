@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { logoutAction } from '../../../actions/auth';
 import { useScreenWidth } from '../../../hooks/useScreenWidth';
 
 import PopOverController from '../../ui/PopOverController';

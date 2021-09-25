@@ -17,7 +17,7 @@ const Following = ({
 
   useEffect(() => {
     fetchUserFollowingAction(id);
-  }, []);
+  }, [fetchUserFollowingAction, id]);
 
   function handleOnFollowUser(id) {
     followUserInFollowingAction(id);

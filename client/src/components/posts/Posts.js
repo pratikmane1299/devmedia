@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
@@ -17,7 +16,6 @@ import { MiddlePanel } from '../Layout/GridPanels';
 import PostItem from '../ui/PostItem';
 import PostComment from '../ui/PostComment';
 import MyFollowing from '../Layout/MyFollowing';
-import SearchHeader from '../ui/mobile/header/SearchHeader';
 
 export const Posts = ({
   posts,

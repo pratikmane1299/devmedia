@@ -1,10 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMapMarkerAlt, faGlobe } from '@fortawesome/free-solid-svg-icons';
 
 import Website from '../ui/Website';
-import UserAvatar from '../ui/UserAvatar';
 import UserHorizontalCard from '../suggested-users/UserHorizontalCard';
 
 function DeveloperCard({

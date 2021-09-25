@@ -31,7 +31,7 @@ export const FollowersAndFollowing = ({ auth }) => {
 
   useEffect(() => {
     history.push(pathName.replace(currentNestedPath, activeTab));
-  }, [activeTab]);
+  }, [activeTab, currentNestedPath, history, pathName]);
 
   return (
     <MainLayout>

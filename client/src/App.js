@@ -2,9 +2,7 @@ import { useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import Navbar from './components/Layout/Navbar';
 import Landing from './components/Layout/Landing';
-import Routes from './components/routing/Routes';
 import PrivateRoute from './components/routing/PrivateRoute';
 import { HomePage } from './Pages/Home';
 import { Search as SearchPage } from './Pages/Search';
@@ -26,7 +24,6 @@ function App({ isAuthenticated, fetchCurrentUserAction }) {
   return (
     <Router>
       <>
-        {/* <Navbar /> */}
         <Alert />
         <Switch>
           <Route exact path="/" component={Landing} />
@@ -38,7 +35,6 @@ function App({ isAuthenticated, fetchCurrentUserAction }) {
           <PrivateRoute path="/profiles/:id/followers" component={FollowersFollowingPage} />
           <PrivateRoute exact path="/developers" component={Developers} />
           <PrivateRoute exact path="/search" component={SearchPage} />
-          {/* <Route component={Routes} /> */}
         </Switch>
       </>
     </Router>

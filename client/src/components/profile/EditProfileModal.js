@@ -31,7 +31,7 @@ const initialState = {
 
 export const EditProfileModal = ({ isOpen, profile, onRequestClose }) => {
   const [showSocialMediaLinks, toggleSocialMediaLinks] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
 
   const [profileForm, setProfileForm] = useState(initialState);
 

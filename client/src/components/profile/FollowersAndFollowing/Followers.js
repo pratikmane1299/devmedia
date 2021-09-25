@@ -17,7 +17,7 @@ export const Followers = ({
 
   useEffect(() => {
     fetchUserFollowersAction(id);
-  }, []);
+  }, [fetchUserFollowersAction, id]);
 
   function handleOnFollowUser(id) {
     // console.log(id);
